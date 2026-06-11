@@ -1,0 +1,61 @@
+lead_score,lead_reasons,name,category,address,phone,website,has_website,rating,reviews,maps_url
+6,No website | No reviews,Mobile Mechanic R&R,Taller de automóviles,"
+2625 NW 22nd Ct, Miami, FL 33142, Estados Unidos","
++1 305-218-9761",,False,,,https://www.google.com/maps/place/Mobile+Mechanic+R%26R/data=!4m7!3m6!1s0x88d9b7f803c3f2fd:0xd3588cc28ab54db6!8m2!3d25.8006936!4d-80.2325485!16s%2Fg%2F11sscszdz6!19sChIJ_fLDA_i32YgRtk21isKMWNM
+6,No website | No reviews,J C Car Care Center,Taller de reparación de automóviles,"
+5560 NW 27th Ave, Miami, FL 33142, Estados Unidos","
++1 305-633-1824",,False,,,https://www.google.com/maps/place/J+C+Car+Care+Center/data=!4m7!3m6!1s0x88d9b0dc8fb0ee55:0x87ee73b5a51d4973!8m2!3d25.8255677!4d-80.2411421!16s%2Fg%2F1tks736p!19sChIJVe6wj9yw2YgRc0kdpbVz7oc
+6,No website | No reviews,Miami Auto Repair Shop Brakes Tune Ups & Collision Multiser Versailles,Taller de reparación de automóviles,"
+3231 SW 8th St, Miami, FL 33135, Estados Unidos","
++1 786-474-1311",,False,,,https://www.google.com/maps/place/Miami+Auto+Repair+Shop+Brakes+Tune+Ups+%26+Collision+Multiser+Versailles/data=!4m7!3m6!1s0x88d9b71ca4343793:0xc0a1e852c9687be!8m2!3d25.7651521!4d-80.2478759!16s%2Fg%2F11ppk71f9b!19sChIJkzc0pBy32YgRvoeWLIUeCgw
+1,No reviews,Rey's Auto Repair Shop,Taller de reparación de automóviles,"
+527 SW 15th Ave, Miami, FL 33135, Estados Unidos","
++1 305-541-7339",https://search.app/fXQeVBRakCV64sbB8,True,,,https://www.google.com/maps/place/Rey%27s+Auto+Repair+Shop/data=!4m7!3m6!1s0x88d9b6f0f593c7d3:0x87bb1ec01374f8d5!8m2!3d25.7679903!4d-80.2193274!16s%2Fg%2F1thxlwc9!19sChIJ08eT9fC22YgR1fh0E8Aeu4c
+1,No reviews,AutoVice,Taller de reparación de automóviles,"
+875 W Flagler St, Miami, FL 33130, Estados Unidos","
++1 305-563-7272",http://www.autovice1.com/,True,,,https://www.google.com/maps/place/AutoVice/data=!4m7!3m6!1s0x88d9b781f256b347:0x8e1eb59585395b0f!8m2!3d25.7739487!4d-80.2091524!16s%2Fg%2F11hd_wwdlv!19sChIJR7NW8oG32YgRD1s5hZW1Ho4
+1,No reviews,Tony’s Vehicle Solutions,Taller de reparación de automóviles,"
+3693 SW 7th St, Miami, FL 33135, Estados Unidos","
++1 786-703-9084",https://tonyvehiclesolution.com/,True,,,https://www.google.com/maps/place/Tony%E2%80%99s+Vehicle+Solutions/data=!4m7!3m6!1s0x88d9b76dec38b131:0x69f7483f183de67b!8m2!3d25.765735!4d-80.254856!16s%2Fg%2F11f5p2qytw!19sChIJMbE47G232YgRe-Y9GD9I92k
+1,No reviews,E T Auto Repair,Taller de reparación de automóviles,"
+2319 NW 27th Ave, Miami, FL 33142, Estados Unidos","
++1 305-637-8492",http://elt711.wixsite.com/etautorepair,True,,,https://www.google.com/maps/place/E+T+Auto+Repair/data=!4m7!3m6!1s0x88d9b6b5cf69310d:0x250e6402fc2b22cf!8m2!3d25.798385!4d-80.2396464!16s%2Fg%2F1vfp4fpf!19sChIJDTFpz7W22YgRzyIr_AJkDiU
+1,No reviews,Mario's Auto Repair,Taller de reparación de automóviles,"
+1160 SW 5th St, Miami, FL 33130, Estados Unidos","
++1 305-815-1067",http://www.miamimarioautorepair.com/,True,,,https://www.google.com/maps/place/Mario%27s+Auto+Repair/data=!4m7!3m6!1s0x88d9b6f23fb4249d:0x47b1899353ab9d3a!8m2!3d25.768561!4d-80.214058!16s%2Fg%2F1tdh4n_r!19sChIJnSS0P_K22YgROp2rU5OJsUc
+1,No reviews,Green's Garage,Taller de reparación de automóviles,"
+2221 SW 32nd Ave, Miami, FL 33145, Estados Unidos","
++1 305-444-8881",https://www.greensgaragemiami.com/,True,,,https://www.google.com/maps/place/Green%27s+Garage/data=!4m7!3m6!1s0x88d9b7a4d6356979:0xb2c38377a2974489!8m2!3d25.7495784!4d-80.2462346!16s%2Fg%2F1tfxyvbk!19sChIJeWk11qS32YgRiUSXoneDw7I
+1,No reviews,Fast Tire & Auto Repair Miami,Taller de reparación de automóviles,"
+3401 NW 7th Ave, Miami, FL 33127, Estados Unidos","
++1 305-433-5005",https://www.fasttireautorepair.com/pompanobeach,True,,,https://www.google.com/maps/place/Fast+Tire+%26+Auto+Repair+Miami/data=!4m7!3m6!1s0x88d9b1c3b7b58ad7:0x4c8c51076fd2ecbe!8m2!3d25.8085017!4d-80.2072289!16s%2Fg%2F11yq64ym0c!19sChIJ14q1t8Ox2YgRvuzSbwdRjEw
+1,No reviews,Miami's Quality Auto Repair,Taller de reparación de automóviles,"
+4555 SW 71st Ave, Miami, FL 33155, Estados Unidos","
++1 305-574-9099",http://qualityautorepairfl.com/?utm_campaign=gmb,True,,,https://www.google.com/maps/place/Miami%27s+Quality+Auto+Repair/data=!4m7!3m6!1s0x88d9b8703e276f05:0x411b8bc27e5cf1bf!8m2!3d25.7284848!4d-80.3084442!16s%2Fg%2F1tjkglqh!19sChIJBW8nPnC42YgRv_FcfsKLG0E
+1,No reviews,Leader Service,Taller de reparación de automóviles,"
+1700 Coral Wy, Miami, FL 33145, Estados Unidos","
++1 305-858-1020",https://leaderservicemiami.com/,True,,,https://www.google.com/maps/place/Leader+Service/data=!4m7!3m6!1s0x88d9b650f36d8997:0xc770d09dbefb12e8!8m2!3d25.7505761!4d-80.2222789!16s%2Fg%2F11g_0tslj!19sChIJl4lt81C22YgR6BL7vp3QcMc
+1,No reviews,MTJ Paint and Body Shop Miami Fl,Taller de chapa y pintura,"
+4510 NW 32nd Ave, Miami, FL 33142, Estados Unidos","
++1 305-632-1914",https://www.411collision.com/,True,,,https://www.google.com/maps/place/MTJ+Paint+and+Body+Shop+Miami+Fl/data=!4m7!3m6!1s0x88d9b0c932ce34a3:0xacf008d77f58b9d!8m2!3d25.8156181!4d-80.2487931!16s%2Fg%2F1tdhmmgm!19sChIJozTOMsmw2YgRnYv1d40Azwo
+1,No reviews,"Manny's Auto Service, Inc.",Taller de reparación de automóviles,"
+5609 NW 6th St, Miami, FL 33126, Estados Unidos","
++1 305-262-9921",http://www.mannysautoservice.com/,True,,,"https://www.google.com/maps/place/Manny%27s+Auto+Service,+Inc./data=!4m7!3m6!1s0x88d9b9dac317715b:0xcfeae8b18dd7c883!8m2!3d25.7774066!4d-80.2863916!16s%2Fg%2F1tc_lyv0!19sChIJW3EXw9q52YgRg8jXjbHo6s8"
+1,No reviews,Red Lion Auto Repair,Taller de reparación de automóviles,"
+555 NW 79th St, Miami, FL 33150, Estados Unidos","
++1 786-530-9995",http://www.redlionauto.com/,True,,,https://www.google.com/maps/place/Red+Lion+Auto+Repair/data=!4m7!3m6!1s0x88d9b15ec8b68f37:0x436a3a8873c53035!8m2!3d25.847577!4d-80.2063856!16s%2Fg%2F11s187nnyx!19sChIJN4-2yF6x2YgRNTDFc4g6akM
+1,No reviews,MasterClass Automotive,Taller de reparación de automóviles,"
+1800 NW 23rd St, Miami, FL 33142, Estados Unidos","
++1 305-351-2012",https://masterclassauto.com/,True,,,https://www.google.com/maps/place/MasterClass+Automotive/data=!4m7!3m6!1s0x88d9b6d17535385b:0x37aa32b2e9f737ac!8m2!3d25.7981513!4d-80.2257492!16s%2Fg%2F1tplr3hh!19sChIJWzg1ddG22YgRrDf36bIyqjc
+1,No reviews,ALFA GARAGE MIAMI,Taller de reparación de automóviles,"
+ALFA GARAGE BUILDING, 3970 NW 27th St, Miami, FL 33142, Estados Unidos","
++1 305-871-5551",http://alfagaragemiami.com/,True,,,https://www.google.com/maps/place/ALFA+GARAGE+MIAMI/data=!4m7!3m6!1s0x88d9b74edde85511:0x9dbaec11d21a4772!8m2!3d25.800106!4d-80.2614979!16s%2Fg%2F1thzppxg!19sChIJEVXo3U632YgRckca0hHsup0
+1,No reviews,Miami Shores Auto Repair Inc,Taller de reparación de automóviles,"
+9734 NE 2nd Ave, Miami Shores, FL 33138, Estados Unidos","
++1 305-759-4988",http://www.miamishoresautorepair.com/,True,,,https://www.google.com/maps/place/Miami+Shores+Auto+Repair+Inc/data=!4m7!3m6!1s0x88d9a40f140ac2ab:0xfe92b7182e69b9d6!8m2!3d25.8650658!4d-80.1937831!16s%2Fg%2F1v3kj9fv!19sChIJq8IKFA-k2YgR1rlpLhi3kv4
+1,No reviews,A Auto Tech Inc,Taller de chapa y pintura,"
+3051 SW 38th Ct, Miami, FL 33146, Estados Unidos","
++1 305-448-4100",http://www.aautotech.com/,True,,,https://www.google.com/maps/place/A+Auto+Tech+Inc/data=!4m7!3m6!1s0x88d9b7ea4be447d9:0xc40d896c2414eca!8m2!3d25.7338563!4d-80.2566882!16s%2Fg%2F1tdvw33k!19sChIJ2UfkS-q32YgRyk5BwpbYQAw
+1,No reviews,Miami Euro Auto Center,Taller de automóviles,"
+7100 NE 2nd Ave, Miami, FL 33138, Estados Unidos","
++1 305-440-0587",http://miamieuroautocenter.com/,True,,,https://www.google.com/maps/place/Miami+Euro+Auto+Center/data=!4m7!3m6!1s0x88d9b1db9e27537d:0x4dc8b2228700501b!8m2!3d25.8403724!4d-80.1928898!16s%2Fg%2F11sx0yxf8p!19sChIJfVMnntux2YgRG1AAhyKyyE0
