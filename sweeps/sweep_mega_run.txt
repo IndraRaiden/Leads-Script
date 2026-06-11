@@ -1,0 +1,43 @@
+# Mega sweep 2026-06-11: proven verticals x fresh cities.
+# Weighted toward top performers: welding (40%), machine shops (40%), auto repair (25%), manufacturing (25%).
+# Run with: python leads_scraper.py --sweep sweep_mega_run.txt -n 20
+
+# Welding shops — top vertical (Tulsa hit 40%)
+welding shop | Oklahoma City OK
+welding shop | Kansas City MO
+welding shop | Birmingham AL
+welding shop | Louisville KY
+welding shop | Wichita KS
+welding shop | El Paso TX
+welding shop | Houston TX
+welding shop | Albuquerque NM
+
+# Machine shops — Detroit hit 40%
+machine shop | Toledo OH
+machine shop | Akron OH
+machine shop | Grand Rapids MI
+machine shop | St Louis MO
+machine shop | Buffalo NY
+machine shop | Cincinnati OH
+machine shop | Knoxville TN
+
+# Auto repair — San Antonio hit 25%
+auto repair shop | El Paso TX
+auto repair shop | Oklahoma City OK
+auto repair shop | Albuquerque NM
+auto repair shop | Tucson AZ
+auto repair shop | Fresno CA
+auto repair shop | Bakersfield CA
+auto repair shop | Jacksonville FL
+
+# Manufacturing — Pittsburgh hit 25%
+manufacturing company | St Louis MO
+manufacturing company | Buffalo NY
+manufacturing company | Rochester NY
+manufacturing company | Dayton OH
+manufacturing company | Louisville KY
+
+# Fabrication — mid tier but solid
+sheet metal fabrication | Columbus OH
+sheet metal fabrication | Kansas City MO
+welding and fabrication | Fort Worth TX

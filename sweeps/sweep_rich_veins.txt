@@ -1,0 +1,11 @@
+# Rich-vein sweep: verticals proven to have high no-website rates.
+# Format: business type | location
+# Run with: python leads_scraper.py --sweep sweep_rich_veins.txt -n 20
+machine shop | Cleveland OH
+machine shop | Milwaukee WI
+trucking company | Dallas TX
+trucking company | Memphis TN
+auto repair shop | San Antonio TX
+manufacturing company | Pittsburgh PA
+welding shop | Tulsa OK
+sheet metal fabrication | Indianapolis IN

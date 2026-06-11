@@ -1,0 +1,46 @@
+lead_score,lead_reasons,name,category,address,phone,website,has_website,rating,reviews,maps_url
+6,No website | No reviews,"M & P Transport Company, INC.",Empresa de transporte por camión,"
+3401 S 39th Ave, Phoenix, AZ 85009, Estados Unidos","
++1 602-272-2637",,False,,,"https://www.google.com/maps/place/M+%26+P+Transport+Company,+INC./data=!4m7!3m6!1s0x872b16b14fdfd909:0xfe61aa889155a3d5!8m2!3d33.4181537!4d-112.1428213!16s%2Fg%2F1wv_spby!19sChIJCdnfT7EWK4cR1aNVkYiqYf4"
+6,No website | No reviews,L & N Transport Inc,Empresa de transporte por camión,"
+1830 S 27th Ave, Phoenix, AZ 85009, Estados Unidos","
++1 602-484-0563",,False,,,https://www.google.com/maps/place/L+%26+N+Transport+Inc/data=!4m7!3m6!1s0x872b1160cebef251:0x804e825d915227ee!8m2!3d33.4305264!4d-112.1175783!16s%2Fg%2F1tdlc5fv!19sChIJUfK-zmARK4cR7idSkV2CToA
+1,No reviews,Stewart Transport,Empresa de transporte por camión,"
+8164 W Buckeye Rd, Phoenix, AZ 85043, Estados Unidos","
++1 602-242-1800",http://www.stewarttransport.com/,True,,,https://www.google.com/maps/place/Stewart+Transport/data=!4m7!3m6!1s0x872b1450ffffffff:0xd2f6f14293eba9e2!8m2!3d33.4379787!4d-112.235379!16s%2Fg%2F11b6zxrgp6!19sChIJ_____1AUK4cR4qnrk0Lx9tI
+1,No reviews,May Trucking Co,Empresa de transporte por camión,"
+2501 W Durango St, Phoenix, AZ 85009, Estados Unidos","
++1 602-256-2440",http://www.maytrucking.com/,True,,,https://www.google.com/maps/place/May+Trucking+Co/data=!4m7!3m6!1s0x872b119dc2a573a7:0x317c513d037d50d9!8m2!3d33.4292935!4d-112.1112737!16s%2Fg%2F1tp2_vj6!19sChIJp3Olwp0RK4cR2VB9Az1RfDE
+1,No reviews,"Shippers Preferred Express, Inc.",Empresa de transporte por camión,"
+2224 Grand Ave, Phoenix, AZ 85009, Estados Unidos","
++1 602-278-6004",http://www.spxinc.com/,True,,,"https://www.google.com/maps/place/Shippers+Preferred+Express,+Inc./data=!4m7!3m6!1s0x872b13af9d1dbdff:0x5591148a9ac24ec8!8m2!3d33.4721671!4d-112.1062395!16s%2Fg%2F11bc744drw!19sChIJ_70dna8TK4cRyE7CmooUkVU"
+1,No reviews,System Transport Inc,Empresa de transporte por camión,"
+1820 W Broadway Rd, Phoenix, AZ 85041, Estados Unidos","
++1 602-243-2900",http://www.systemtrans.com/,True,,,https://www.google.com/maps/place/System+Transport+Inc/data=!4m7!3m6!1s0x872b1107dd23073d:0xeaee95eeaf0181f8!8m2!3d33.4071703!4d-112.0971007!16s%2Fg%2F1tlndxml!19sChIJPQcj3QcRK4cR-IEBr-6V7uo
+1,No reviews,"Western Transport Logistics, Inc.",Empresa de transporte por camión,"
+2601 E Magnolia St, Phoenix, AZ 85034, Estados Unidos","
++1 602-246-1417",http://www.westranz.com/,True,,,"https://www.google.com/maps/place/Western+Transport+Logistics,+Inc./data=!4m7!3m6!1s0x872b13dcc3ae1c5b:0x544a52b7974d70a4!8m2!3d33.4220248!4d-112.0257798!16s%2Fg%2F11bzzyryv4!19sChIJWxyuw9wTK4cRpHBNl7dSSlQ"
+1,No reviews,"Werner Enterprises, Inc",Empresa de transporte por camión,"
+4801 W Magnolia St, Phoenix, AZ 85043, Estados Unidos","
++1 602-455-3060",https://www.werner.com/,True,,,"https://www.google.com/maps/place/Werner+Enterprises,+Inc/data=!4m7!3m6!1s0x872b16a1341bdf6b:0x3e60429658fbde51!8m2!3d33.4231701!4d-112.1622667!16s%2Fg%2F1tcvzww3!19sChIJa98bNKEWK4cRUd77WJZCYD4"
+1,No reviews,Michael Most Trucking,Empresa de transporte por camión,"
+540 S 55th Ave, Phoenix, AZ 85043, Estados Unidos","
++1 602-353-8400",http://michaelmosttrucking.com/,True,,,https://www.google.com/maps/place/Michael+Most+Trucking/data=!4m7!3m6!1s0x872b1439c57c728d:0x187b84147e26be5b!8m2!3d33.4437921!4d-112.1782362!16s%2Fg%2F1td4_9wz!19sChIJjXJ8xTkUK4cRW74mfhSEexg
+1,No reviews,Network Transportation LLC,Empresa de transporte por camión,"
+825 S 63rd Ave, Phoenix, AZ 85043, Estados Unidos","
++1 623-936-5865",http://networktransllc.com/,True,,,https://www.google.com/maps/place/Network+Transportation+LLC/data=!4m7!3m6!1s0x872b15cbae723237:0x61d22aef5ef7852c!8m2!3d33.4396858!4d-112.1947129!16s%2Fg%2F11bw613b7t!19sChIJNzJyrssVK4cRLIX3Xu8q0mE
+1,No reviews,Schneider,Empresa de transporte por camión,"
+3150 S 39th Ave, Phoenix, AZ 85009, Estados Unidos","
++1 800-343-8531",https://www.schneider.com/,True,,,https://www.google.com/maps/place/Schneider/data=!4m7!3m6!1s0x872c9e6d2a40561b:0xb7a5c81b83b780c5!8m2!3d33.4193614!4d-112.1443404!16s%2Fg%2F1262cwssr!19sChIJG1ZAKm2eLIcRxYC3gxvIpbc
+1,No reviews,Crete Carrier Corporation,Empresa de transporte por camión,"
+2346 S 16th Ave, Phoenix, AZ 85007, Estados Unidos","
++1 602-269-6719",https://cretecarrier.com/company/locations/,True,,,https://www.google.com/maps/place/Crete+Carrier+Corporation/data=!4m7!3m6!1s0x872b119da273426f:0x40138f26828ce18d!8m2!3d33.4260608!4d-112.0943833!16s%2Fg%2F1263pw4xv!19sChIJb0Jzop0RK4cRjeGMgiaPE0A
+1,No reviews,Matt Brown Trucking Inc,Empresa de transporte por camión,"
+21829 N 16th St, Phoenix, AZ 85024, Estados Unidos","
++1 623-234-3415",http://mattbrowntrucking.com/,True,,,https://www.google.com/maps/place/Matt+Brown+Trucking+Inc/data=!4m7!3m6!1s0x872b6554592a24d5:0x83aba54ec3d2dfef!8m2!3d33.6854972!4d-112.044876!16s%2Fg%2F11c4835vw8!19sChIJ1SQqWVRlK4cR79_Sw06lq4M
+1,No reviews,White Mountain Trucking,Empresa de transporte por camión,"
+6424 South 75th Avenue, Laveen Village, AZ 85339, Estados Unidos","
++1 602-237-9440",http://www.whitemountaintrucking.com/,True,,,https://www.google.com/maps/place/White+Mountain+Trucking/data=!4m7!3m6!1s0x872b114e8496d433:0xd78905049db8ee24!8m2!3d33.3879741!4d-112.2198789!16s%2Fg%2F11c6v_xrcv!19sChIJM9SWhE4RK4cRJO64nQQFidc
+1,No reviews,Heartland Express,Empresa de transporte por camión,"
+4555 W Mohave St, Phoenix, AZ 85043, Estados Unidos","
++1 800-441-4953",https://www.heartlandexpress.com/,True,,,https://www.google.com/maps/place/Heartland+Express/data=!4m7!3m6!1s0x872b141dae98d9f3:0x5327aad3e728d680!8m2!3d33.4308664!4d-112.1573086!16s%2Fg%2F1263zvn5f!19sChIJ89mYrh0UK4cRgNYo59OqJ1M

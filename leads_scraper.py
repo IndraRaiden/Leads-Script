@@ -1,8 +1,24 @@
+"""Google Maps lead scraper for AI SaaS prospecting.
+
+Finds businesses with weak digital presence (no website, few reviews) and
+scores them as leads. Saves a timestamped CSV per run in output/runs/ and
+maintains deduplicated output/MASTER_leads.csv + output/HOT_leads_only.csv.
+
+Usage:
+    python leads_scraper.py                                   # interactive
+    python leads_scraper.py "trucking company" "Phoenix AZ" -n 20
+    python leads_scraper.py --sweep sweeps/sweep_mega_run.txt -n 20
+    python leads_scraper.py ... --show                        # visible browser
+
+Sweep file format (one search per line):
+    trucking company | Phoenix AZ
+    machine shop | Detroit MI
+"""
+
+import argparse
 import asyncio
 import csv
-import os
 import re
-import time
 from datetime import datetime
 from pathlib import Path
 
@@ -10,9 +26,19 @@ from playwright.async_api import async_playwright
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 from rich.table import Table
-from rich import print as rprint
 
 console = Console()
+
+OUTPUT_DIR = Path("output")
+RUNS_DIR = OUTPUT_DIR / "runs"
+MASTER_FILE = OUTPUT_DIR / "MASTER_leads.csv"
+HOT_FILE = OUTPUT_DIR / "HOT_leads_only.csv"
+
+FIELDS = [
+    "lead_score", "lead_reasons", "name", "category", "address",
+    "phone", "website", "has_website", "rating", "reviews",
+    "search_query", "search_location", "scraped_date", "maps_url",
+]
 
 SCORE_RULES = {
     "no_website": 5,
@@ -21,6 +47,7 @@ SCORE_RULES = {
     "no_rating": 1,
     "low_rating": 1,       # < 3.5 stars
 }
+
 
 def score_lead(has_website: bool, reviews: int | None, rating: float | None) -> tuple[int, list[str]]:
     score = 0
@@ -40,13 +67,15 @@ def score_lead(has_website: bool, reviews: int | None, rating: float | None) -> 
         score += SCORE_RULES["medium_reviews"]
         reasons.append(f"{reviews} reviews")
 
-    if rating is None:
-        pass
-    elif rating < 3.5:
+    if rating is not None and rating < 3.5:
         score += SCORE_RULES["low_rating"]
         reasons.append(f"Low rating {rating}")
 
     return score, reasons
+
+
+def clean_text(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def parse_reviews(text: str) -> int | None:
@@ -62,7 +91,7 @@ def parse_rating(text: str) -> float | None:
     return None
 
 
-async def scrape_listing(page, url: str) -> dict:
+async def scrape_listing(page, url: str, query: str, location: str) -> dict:
     result = {
         "name": "",
         "category": "",
@@ -72,30 +101,30 @@ async def scrape_listing(page, url: str) -> dict:
         "has_website": False,
         "rating": None,
         "reviews": None,
+        "search_query": query,
+        "search_location": location,
+        "scraped_date": datetime.now().strftime("%Y-%m-%d"),
         "maps_url": url,
         "lead_score": 0,
         "lead_reasons": "",
     }
 
     try:
-        await page.goto(url, wait_until="domcontentloaded", timeout=20000)
+        await page.goto(f"{url}?hl=en", wait_until="domcontentloaded", timeout=20000)
         await page.wait_for_timeout(2000)
 
-        # Name
         try:
-            result["name"] = await page.locator("h1").first.inner_text(timeout=5000)
+            result["name"] = clean_text(await page.locator("h1").first.inner_text(timeout=5000))
         except Exception:
             pass
 
-        # Category
         try:
             cat = page.locator('button[jsaction*="category"]').first
             if await cat.count() > 0:
-                result["category"] = await cat.inner_text(timeout=3000)
+                result["category"] = clean_text(await cat.inner_text(timeout=3000))
         except Exception:
             pass
 
-        # Rating + reviews
         try:
             rating_el = page.locator('div[jsaction*="rating"] span[aria-hidden="true"]').first
             if await rating_el.count() > 0:
@@ -104,7 +133,7 @@ async def scrape_listing(page, url: str) -> dict:
             pass
 
         try:
-            reviews_el = page.locator('span[aria-label*="reseña"], span[aria-label*="review"]').first
+            reviews_el = page.locator('span[aria-label*="review"], span[aria-label*="reseña"]').first
             if await reviews_el.count() > 0:
                 label = await reviews_el.get_attribute("aria-label", timeout=3000)
                 if label:
@@ -112,25 +141,24 @@ async def scrape_listing(page, url: str) -> dict:
         except Exception:
             pass
 
-        # Address
         try:
-            addr = page.locator('button[data-item-id="address"], [data-tooltip="Copiar dirección"], [data-tooltip="Copy address"]').first
+            addr = page.locator('button[data-item-id="address"]').first
             if await addr.count() > 0:
-                result["address"] = await addr.inner_text(timeout=3000)
+                result["address"] = clean_text(await addr.inner_text(timeout=3000))
         except Exception:
             pass
 
-        # Phone
         try:
             phone = page.locator('button[data-item-id*="phone"]').first
             if await phone.count() > 0:
-                result["phone"] = await phone.inner_text(timeout=3000)
+                raw = clean_text(await phone.inner_text(timeout=3000))
+                match = re.search(r"[+\d][\d\s\-().]*\d", raw)
+                result["phone"] = match.group(0) if match else raw
         except Exception:
             pass
 
-        # Website
         try:
-            web = page.locator('a[data-item-id="authority"], a[aria-label*="sitio web"], a[aria-label*="website"]').first
+            web = page.locator('a[data-item-id="authority"]').first
             if await web.count() > 0:
                 href = await web.get_attribute("href", timeout=3000)
                 if href and not href.startswith("https://maps.google"):
@@ -149,123 +177,122 @@ async def scrape_listing(page, url: str) -> dict:
     return result
 
 
-async def search_google_maps(query: str, location: str, max_results: int) -> list[str]:
+async def collect_listing_urls(page, query: str, location: str, max_results: int) -> list[str]:
     urls = []
     search_term = f"{query} in {location}"
 
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, slow_mo=50)
-        context = await browser.new_context(
-            locale="en-US",
-            geolocation=None,
-            viewport={"width": 1280, "height": 900},
-        )
-        page = await context.new_page()
+    console.print(f"\n[cyan]Searching Google Maps:[/cyan] {search_term}")
+    await page.goto(
+        f"https://www.google.com/maps/search/{search_term.replace(' ', '+')}?hl=en",
+        wait_until="domcontentloaded",
+    )
+    await page.wait_for_timeout(3000)
 
-        console.print(f"\n[cyan]Searching Google Maps:[/cyan] {search_term}")
-        await page.goto(
-            f"https://www.google.com/maps/search/{search_term.replace(' ', '+')}",
-            wait_until="domcontentloaded",
-        )
-        await page.wait_for_timeout(3000)
-
-        # Accept cookies if prompted
+    # Accept cookies if prompted
+    for label in ("Accept all", "Aceptar todo"):
         try:
-            await page.click('button:has-text("Accept all")', timeout=3000)
-            await page.click('button:has-text("Aceptar todo")', timeout=3000)
+            await page.click(f'button:has-text("{label}")', timeout=2000)
+            break
         except Exception:
             pass
 
-        await page.wait_for_timeout(2000)
+    await page.wait_for_timeout(1500)
 
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TextColumn("{task.completed}/{task.total}"),
-            console=console,
-        ) as progress:
-            task = progress.add_task("Collecting listing URLs...", total=max_results)
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TextColumn("{task.completed}/{task.total}"),
+        console=console,
+    ) as progress:
+        task = progress.add_task("Collecting listing URLs...", total=max_results)
 
-            last_count = 0
-            stall_count = 0
+        last_count = 0
+        stall_count = 0
+        seen = set()
 
-            while len(urls) < max_results:
-                # Collect all visible listing links
-                links = await page.locator('a[href*="/maps/place/"]').all()
-                seen = set(urls)
-                for link in links:
-                    href = await link.get_attribute("href")
-                    if href and href not in seen and "/maps/place/" in href:
-                        # Clean URL to canonical form
-                        clean = href.split("?")[0] if "?" in href else href
-                        if clean not in seen:
-                            urls.append(clean)
-                            seen.add(clean)
-                            progress.update(task, completed=min(len(urls), max_results))
-                            if len(urls) >= max_results:
-                                break
-
-                if len(urls) >= max_results:
-                    break
-
-                # Scroll results panel
-                panel = page.locator('div[role="feed"]').first
-                if await panel.count() > 0:
-                    await panel.evaluate("el => el.scrollTop += 1200")
-                else:
-                    await page.keyboard.press("End")
-
-                await page.wait_for_timeout(1500)
-
-                if len(urls) == last_count:
-                    stall_count += 1
-                    if stall_count >= 4:
-                        console.print("[yellow]No more results found.[/yellow]")
+        while len(urls) < max_results:
+            links = await page.locator('a[href*="/maps/place/"]').all()
+            for link in links:
+                href = await link.get_attribute("href")
+                if not href or "/maps/place/" not in href:
+                    continue
+                clean = href.split("?")[0]
+                if clean not in seen:
+                    urls.append(clean)
+                    seen.add(clean)
+                    progress.update(task, completed=min(len(urls), max_results))
+                    if len(urls) >= max_results:
                         break
-                else:
-                    stall_count = 0
-                    last_count = len(urls)
 
-        await browser.close()
+            if len(urls) >= max_results:
+                break
+
+            panel = page.locator('div[role="feed"]').first
+            if await panel.count() > 0:
+                await panel.evaluate("el => el.scrollTop += 1200")
+            else:
+                await page.keyboard.press("End")
+
+            await page.wait_for_timeout(1500)
+
+            if len(urls) == last_count:
+                stall_count += 1
+                if stall_count >= 4:
+                    console.print("[yellow]No more results found.[/yellow]")
+                    break
+            else:
+                stall_count = 0
+                last_count = len(urls)
 
     return urls[:max_results]
 
 
-async def scrape_leads(query: str, location: str, max_results: int) -> list[dict]:
-    console.print(f"\n[bold green]Step 1:[/bold green] Finding business listings...")
-    urls = await search_google_maps(query, location, max_results)
-    console.print(f"[green]Found {len(urls)} listings.[/green]")
-
+async def run_searches(searches: list[tuple[str, str]], max_results: int, show_browser: bool,
+                       checkpoint_file: str | None = None) -> list[dict]:
     leads = []
-
-    console.print(f"\n[bold green]Step 2:[/bold green] Scraping details for each business...\n")
+    seen_keys = set()
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        context = await browser.new_context(locale="en-US", viewport={"width": 1280, "height": 900})
+        browser = await p.chromium.launch(headless=not show_browser)
+        context = await browser.new_context(
+            locale="en-US",
+            viewport={"width": 1280, "height": 900},
+        )
         page = await context.new_page()
 
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TextColumn("{task.completed}/{task.total}"),
-            console=console,
-        ) as progress:
-            task = progress.add_task("Scraping business details...", total=len(urls))
+        for i, (query, location) in enumerate(searches, 1):
+            console.rule(f"[bold]Search {i}/{len(searches)}: {query} in {location}[/bold]")
 
-            for url in urls:
-                data = await scrape_listing(page, url)
-                if data["name"]:
-                    leads.append(data)
-                    status = "[red]No website[/red]" if not data["has_website"] else "[dim]Has website[/dim]"
-                    score_color = "green" if data["lead_score"] >= 5 else "yellow" if data["lead_score"] >= 3 else "dim"
-                    console.print(
-                        f"  [{score_color}]Score {data['lead_score']}[/{score_color}] | {status} | {data['name']}"
-                    )
-                progress.update(task, advance=1)
-                await page.wait_for_timeout(500)
+            urls = await collect_listing_urls(page, query, location, max_results)
+            console.print(f"[green]Found {len(urls)} listings.[/green]\n")
+
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(),
+                TextColumn("{task.completed}/{task.total}"),
+                console=console,
+            ) as progress:
+                task = progress.add_task("Scraping business details...", total=len(urls))
+
+                for url in urls:
+                    data = await scrape_listing(page, url, query, location)
+                    key = (data["name"].lower(), data["phone"])
+                    if data["name"] and key not in seen_keys:
+                        seen_keys.add(key)
+                        leads.append(data)
+                        status = "[red]No website[/red]" if not data["has_website"] else "[dim]Has website[/dim]"
+                        score_color = "green" if data["lead_score"] >= 5 else "yellow" if data["lead_score"] >= 3 else "dim"
+                        console.print(
+                            f"  [{score_color}]Score {data['lead_score']}[/{score_color}] | {status} | {data['name']}"
+                        )
+                    progress.update(task, advance=1)
+                    await page.wait_for_timeout(500)
+
+            if checkpoint_file:
+                save_csv(sorted(leads, key=lambda x: x["lead_score"], reverse=True), checkpoint_file)
+                console.print(f"[dim]Checkpoint saved: {len(leads)} leads so far.[/dim]")
 
         await browser.close()
 
@@ -273,14 +300,45 @@ async def scrape_leads(query: str, location: str, max_results: int) -> list[dict
 
 
 def save_csv(leads: list[dict], filename: str):
-    fields = [
-        "lead_score", "lead_reasons", "name", "category", "address",
-        "phone", "website", "has_website", "rating", "reviews", "maps_url",
-    ]
     with open(filename, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fields)
+        writer = csv.DictWriter(f, fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(leads)
+
+
+def update_master(leads: list[dict]) -> tuple[int, int, int]:
+    """Merge new leads into the master CSV, deduped by (name, phone).
+
+    Also refreshes the hot-leads-only export. Returns (new, total, hot) counts.
+    """
+    existing = []
+    if MASTER_FILE.exists():
+        with open(MASTER_FILE, encoding="utf-8") as f:
+            existing = list(csv.DictReader(f))
+
+    seen = {(row["name"].lower(), row.get("phone", "")) for row in existing}
+    new_rows = []
+    for lead in leads:
+        key = (lead["name"].lower(), lead["phone"])
+        if key not in seen:
+            seen.add(key)
+            new_rows.append(lead)
+
+    combined = existing + [{k: str(v) for k, v in lead.items()} for lead in new_rows]
+    combined.sort(key=lambda r: int(r["lead_score"] or 0), reverse=True)
+
+    with open(MASTER_FILE, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(combined)
+
+    hot = [r for r in combined if int(r["lead_score"] or 0) >= 5]
+    with open(HOT_FILE, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(hot)
+
+    return len(new_rows), len(combined), len(hot)
 
 
 def print_summary(leads: list[dict]):
@@ -304,29 +362,68 @@ def print_summary(leads: list[dict]):
     console.print(table)
 
     if hot:
-        console.print("\n[bold green]Top 5 Hot Leads:[/bold green]")
-        for lead in sorted(hot, key=lambda x: x["lead_score"], reverse=True)[:5]:
+        console.print("\n[bold green]Hot Leads:[/bold green]")
+        for lead in sorted(hot, key=lambda x: x["lead_score"], reverse=True):
             console.print(
-                f"  [green]*[/green] {lead['name']} | {lead['address']} | "
+                f"  [green]*[/green] {lead['name']} ({lead['search_location']}) | "
                 f"Phone: {lead['phone'] or 'N/A'} | Score: {lead['lead_score']}"
             )
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Scrape Google Maps for business leads with weak digital presence."
+    )
+    parser.add_argument("query", nargs="?", help="Business type, e.g. 'trucking company'")
+    parser.add_argument("location", nargs="?", help="City/state, e.g. 'Phoenix AZ'")
+    parser.add_argument("-n", "--max-results", type=int, default=50,
+                        help="Max listings per search (default 50)")
+    parser.add_argument("--sweep", metavar="FILE",
+                        help="File with one 'business type | location' per line")
+    parser.add_argument("--show", action="store_true",
+                        help="Show the browser window while scraping")
+    parser.add_argument("--no-master", action="store_true",
+                        help="Don't update MASTER_leads.csv")
+    return parser.parse_args()
+
+
 def main():
+    args = parse_args()
+
     console.rule("[bold cyan]Google Maps Lead Scraper - AI SaaS[/bold cyan]")
     console.print("[dim]Finds businesses without websites or weak digital presence[/dim]\n")
 
-    query = console.input("[bold]Business type[/bold] (e.g. 'accounting firm', 'auto repair', 'dental clinic'): ").strip()
-    location = console.input("[bold]Location[/bold] (e.g. 'Miami FL', 'New York', 'Chicago IL'): ").strip()
-    max_str = console.input("[bold]Max results[/bold] (default 50): ").strip()
-    max_results = int(max_str) if max_str.isdigit() else 50
+    if args.sweep:
+        searches = []
+        for line in Path(args.sweep).read_text(encoding="utf-8-sig").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "|" not in line:
+                continue
+            query, location = (part.strip() for part in line.split("|", 1))
+            searches.append((query, location))
+        if not searches:
+            console.print(f"[red]No valid searches in {args.sweep}.[/red]")
+            return
+    elif args.query and args.location:
+        searches = [(args.query, args.location)]
+    else:
+        query = console.input("[bold]Business type[/bold] (e.g. 'auto repair', 'trucking company'): ").strip()
+        location = console.input("[bold]Location[/bold] (e.g. 'Miami FL', 'Chicago IL'): ").strip()
+        max_str = console.input("[bold]Max results[/bold] (default 50): ").strip()
+        if max_str.isdigit():
+            args.max_results = int(max_str)
+        searches = [(query, location)]
 
+    RUNS_DIR.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    safe_query = re.sub(r"[^\w]", "_", query)
-    safe_location = re.sub(r"[^\w]", "_", location)
-    output_file = f"leads_{safe_query}_{safe_location}_{timestamp}.csv"
+    if len(searches) == 1:
+        safe = re.sub(r"[^\w]+", "_", f"{searches[0][0]}_{searches[0][1]}").strip("_")
+        output_file = str(RUNS_DIR / f"leads_{safe}_{timestamp}.csv")
+    else:
+        output_file = str(RUNS_DIR / f"leads_sweep_{len(searches)}searches_{timestamp}.csv")
 
-    leads = asyncio.run(scrape_leads(query, location, max_results))
+    leads = asyncio.run(run_searches(searches, args.max_results, args.show,
+                                     checkpoint_file=output_file))
 
     if not leads:
         console.print("[red]No leads found. Try a different query or location.[/red]")
@@ -335,8 +432,15 @@ def main():
     leads.sort(key=lambda x: x["lead_score"], reverse=True)
     save_csv(leads, output_file)
     print_summary(leads)
+    console.print(f"\n[bold green]Saved {len(leads)} leads to:[/bold green] {output_file}")
 
-    console.print(f"\n[bold green]Saved {len(leads)} leads to:[/bold green] {output_file}\n")
+    if not args.no_master:
+        new_count, total, hot_count = update_master(leads)
+        console.print(
+            f"[bold green]Master file updated:[/bold green] {MASTER_FILE} "
+            f"(+{new_count} new, {total} total, {hot_count} hot)\n"
+            f"[bold green]Hot leads export:[/bold green] {HOT_FILE}\n"
+        )
 
 
 if __name__ == "__main__":

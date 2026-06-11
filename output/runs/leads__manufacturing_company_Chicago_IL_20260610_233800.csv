@@ -1,0 +1,45 @@
+lead_score,lead_reasons,name,category,address,phone,website,has_website,rating,reviews,maps_url
+6,No website | No reviews,Chicago American Manufacturing,Fábrica,"
+4500 W 47th St, Chicago, IL 60632, Estados Unidos","
++1 773-376-8600",,False,,,https://www.google.com/maps/place/Chicago+American+Manufacturing/data=!4m7!3m6!1s0x880e3182b59397b9:0xdf0d7adba64d907f!8m2!3d41.8079289!4d-87.7353791!16s%2Fg%2F1tdx03q6!19sChIJuZeTtYIxDogRf5BNptt6Dd8
+6,No website | No reviews,United Spring & Manufacturing Co,Fábrica,"
+830 N Pulaski Rd, Chicago, IL 60651, Estados Unidos","
++1 773-384-8464",,False,,,https://www.google.com/maps/place/United+Spring+%26+Manufacturing+Co/data=!4m7!3m6!1s0x880e32cd466493f7:0x8af664a198edeb61!8m2!3d41.896399!4d-87.7264682!16s%2Fg%2F1tks6x8w!19sChIJ95NkRs0yDogRYevtmKFk9oo
+1,No reviews,Lakewood Engineering & Manufacturing Company,Fábrica,"
+501 N Sacramento Blvd, Chicago, IL 60612, Estados Unidos","
++1 773-722-4300","https://pages.cs.wisc.edu/~anhai/wisc-si-archive/data/company_profiles/standard/instances/company_index/Consumer_Products-Durables/Appliances/instances/http:%5E%5Ewww.thestandard.com%5Ecompanies%5Edossier%5E0,1922,270779,00.html",True,,,https://www.google.com/maps/place/Lakewood+Engineering+%26+Manufacturing+Company/data=!4m7!3m6!1s0x880e32a90cbcf24f:0xb965fc00ef8014e2!8m2!3d41.890439!4d-87.7003952!16s%2Fg%2F1yg4fj86m!19sChIJT_K8DKkyDogR4hSA7wD8Zbk
+1,No reviews,Black Swan Manufacturing Company,Fábrica,"
+4255 W Lake St, Chicago, IL 60624, Estados Unidos","
++1 800-252-5796",http://www.blackswanmfg.com/,True,,,https://www.google.com/maps/place/Black+Swan+Manufacturing+Company/data=!4m7!3m6!1s0x880e32d99a91838f:0x35f4812699967488!8m2!3d41.88529!4d-87.7329982!16s%2Fg%2F11cnpby0k9!19sChIJj4ORmtkyDogRiHSWmSaB9DU
+1,No reviews,Laystrom Manufacturing Company,Metal fabricator,"
+3900 W Palmer St, Chicago, IL 60647, Estados Unidos","
++1 773-342-4800",http://www.laystrom.com/,True,,,https://www.google.com/maps/place/Laystrom+Manufacturing+Company/data=!4m7!3m6!1s0x880fcd172466ec19:0xc5768f0b53c36e24!8m2!3d41.9210581!4d-87.7249708!16s%2Fg%2F1v5k3m6d!19sChIJGexmJBfND4gRJG7DUwuPdsU
+1,No reviews,Edsal Manufacturing Corporate Office,Fábrica,"
+1555 W 44th St, Chicago, IL 60609, Estados Unidos",,http://www.edsal.com/,True,,,https://www.google.com/maps/place/Edsal+Manufacturing+Corporate+Office/data=!4m7!3m6!1s0x880e2e7933fc2609:0xd94ffecf3e57e8e5!8m2!3d41.813263!4d-87.6632285!16s%2Fg%2F1v1tnnvr!19sChIJCSb8M3kuDogR5ehXPs_-T9k
+1,No reviews,Dudek & Bock Spring Manufacturing Co,Industry,"
+5100 Roosevelt Rd, Chicago, IL 60644, Estados Unidos","
++1 773-379-4100",https://www.dudek-bock.com/,True,,,https://www.google.com/maps/place/Dudek+%26+Bock+Spring+Manufacturing+Co/data=!4m7!3m6!1s0x880e330dd1040a9f:0x1873ebd265cb95dc!8m2!3d41.8666773!4d-87.752146!16s%2Fg%2F1tdrxxcr!19sChIJnwoE0Q0zDogR3JXLZdLrcxg
+1,No reviews,Alpina Manufacturing LLC,Fábrica,"
+6460 W Cortland St, Chicago, IL 60707, Estados Unidos","
++1 800-915-2828",http://www.fastchangeframes.com/,True,,,https://www.google.com/maps/place/Alpina+Manufacturing+LLC/data=!4m7!3m6!1s0x880fcc5140c639e3:0xdd8e6f326498176a!8m2!3d41.9155502!4d-87.7880935!16s%2Fg%2F1tcv20xk!19sChIJ4znGQFHMD4gRaheYZDJvjt0
+1,No reviews,Unity Manufacturing Co,Fábrica,"
+1260 N Clybourn Ave, Chicago, IL 60610, Estados Unidos","
++1 312-943-5200",http://www.unityusa.com/,True,,,https://www.google.com/maps/place/Unity+Manufacturing+Co/data=!4m7!3m6!1s0x880fd33763ecaeef:0xd6fb83e5d6efb530!8m2!3d41.905175!4d-87.641706!16s%2Fg%2F1thq19cm!19sChIJ767sYzfTD4gRMLXv1uWD-9Y
+1,No reviews,Hub Manufacturing,Fábrica,"
+1212 N Central Park Ave, Chicago, IL 60651, Estados Unidos","
++1 773-252-1373",http://www.hubmanufacturing.com/,True,,,https://www.google.com/maps/place/Hub+Manufacturing/data=!4m7!3m6!1s0x880fcd49ddda191f:0x22a98e66663f19f0!8m2!3d41.9033734!4d-87.7169158!16s%2Fg%2F1tctg684!19sChIJHxna3UnND4gR8Bk_ZmaOqSI
+1,No reviews,Archer Manufacturing Corporation,Empresa de fabricación de plástico,"
+4439 S Knox Ave, Chicago, IL 60632, Estados Unidos","
++1 773-585-7181",http://www.archermfg.com/,True,,,https://www.google.com/maps/place/Archer+Manufacturing+Corporation/data=!4m7!3m6!1s0x880e3178dffce3e5:0xfd0753ad1df725fb!8m2!3d41.8119231!4d-87.7390573!16s%2Fg%2F1tkp5klr!19sChIJ5eP833gxDogR-yX3Ha1TB_0
+1,No reviews,SKOL Manufacturing Co.,Metal fabricator,"
+4444 N Ravenswood Ave, Chicago, IL 60640, Estados Unidos","
++1 773-878-5959",http://www.skolmfg.com/,True,,,https://www.google.com/maps/place/SKOL+Manufacturing+Co./data=!4m7!3m6!1s0x880fd23c58fa8a17:0x581f7ced55692c4c!8m2!3d41.962886!4d-87.674908!16s%2Fg%2F1tdkh7l4!19sChIJF4r6WDzSD4gRTCxpVe18H1g
+1,No reviews,Black Swan Manufacturing Co,Fábrica,"
+4540 W Thomas St, Chicago, IL 60651, Estados Unidos","
++1 773-227-3700",http://www.blackswanmfg.com/,True,,,https://www.google.com/maps/place/Black+Swan+Manufacturing+Co/data=!4m7!3m6!1s0x880fccd44e34a751:0xe1db788ff8a1a031!8m2!3d41.9007557!4d-87.740258!16s%2Fg%2F1tdbllm5!19sChIJUac0TtTMD4gRMaCh-I942-E
+1,No reviews,"Bel-Air Manufacturing, Inc.",Fábrica,"
+3525 W Potomac Ave, Chicago, IL 60651, Estados Unidos","
++1 773-276-7550",http://belairmfg.com/,True,,,"https://www.google.com/maps/place/Bel-Air+Manufacturing,+Inc./data=!4m7!3m6!1s0x880fcd49b4d1f807:0xa3f46f36d50bc7d1!8m2!3d41.9042148!4d-87.7152105!16s%2Fg%2F1264k4lsd!19sChIJB_jRtEnND4gR0ccL1TZv9KM"
+1,No reviews,Cleats Manufacturing Co,Fábrica,"
+1701 S Kostner Ave, Chicago, IL 60623, Estados Unidos","
++1 773-542-0453",https://www.cleatsmfg.com/,True,,,https://www.google.com/maps/place/Cleats+Manufacturing+Co/data=!4m7!3m6!1s0x880e32ff8011753f:0x24c34593d03edbd9!8m2!3d41.8576972!4d-87.7345372!16s%2Fg%2F1tjxg7jz!19sChIJP3URgP8yDogR2ds-0JNFwyQ
