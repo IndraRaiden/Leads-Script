@@ -1,0 +1,13 @@
+# CloudSH sweep MÉXICO — prospectos para SaaS de inteligencia de archivos.
+# Verticales que operan por WhatsApp con montañas de fotos/documentos
+# (pedimentos, facturas, evidencias de entrega, expedientes, recibos).
+# Run with: python leads_scraper.py --sweep sweeps/sweep_cloudstronghold_mx.txt -n 15
+agencia aduanal | Nuevo Laredo Mexico
+agencia aduanal | Ciudad Juarez Mexico
+empresa de transporte de carga | Monterrey Mexico
+fletes y mudanzas | Guadalajara Mexico
+despacho contable | Guadalajara Mexico
+despacho contable | Monterrey Mexico
+constructora | Queretaro Mexico
+administracion de condominios | Ciudad de Mexico
+agencia de seguros | Puebla Mexico

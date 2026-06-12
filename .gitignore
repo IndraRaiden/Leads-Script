@@ -5,3 +5,12 @@ __pycache__/
 
 # Env/secrets
 .env
+
+# macOS
+.DS_Store
+
+# WhatsApp validator — node deps and SESSION CREDENTIALS (never commit auth/)
+whatsapp-validator/node_modules/
+whatsapp-validator/auth/
+whatsapp-validator/qr.png
+whatsapp-validator/connected.flag

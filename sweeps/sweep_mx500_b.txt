@@ -1,0 +1,29 @@
+# MX-500 bloque B — contables, jurídicos, condominios, inmobiliarias (documentos/expedientes).
+despacho contable | Puebla Mexico
+despacho contable | Queretaro Mexico
+despacho contable | Leon Mexico
+despacho contable | Tijuana Mexico
+despacho contable | Merida Mexico
+despacho contable | Toluca Mexico
+despacho contable | Aguascalientes Mexico
+despacho contable | Veracruz Mexico
+despacho juridico | Ciudad de Mexico
+despacho juridico | Monterrey Mexico
+despacho juridico | Puebla Mexico
+despacho juridico | Queretaro Mexico
+despacho juridico | Tijuana Mexico
+administracion de condominios | Guadalajara Mexico
+administracion de condominios | Monterrey Mexico
+administracion de condominios | Queretaro Mexico
+administracion de condominios | Playa del Carmen Mexico
+administracion de condominios | Merida Mexico
+administracion de condominios | Puerto Vallarta Mexico
+inmobiliaria | Cancun Mexico
+inmobiliaria | Playa del Carmen Mexico
+inmobiliaria | Queretaro Mexico
+inmobiliaria | Tulum Mexico
+agencia de seguros | Guadalajara Mexico
+agencia de seguros | Queretaro Mexico
+agencia de seguros | Leon Mexico
+ajustador de seguros | Ciudad de Mexico
+agente de seguros | Merida Mexico

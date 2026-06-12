@@ -1,0 +1,13 @@
+# CloudSH sweep MÉXICO 2 — cobertura nacional (CDMX, GDL, MTY, Cancún, Mérida, Puebla).
+# Verticales que viven de fotos/documentos por WhatsApp.
+# Run with: python leads_scraper.py --sweep sweeps/sweep_cloudstronghold_mx2.txt -n 15
+despacho contable | Ciudad de Mexico
+constructora | Ciudad de Mexico
+administracion de condominios | Cancun Mexico
+agencia de viajes | Cancun Mexico
+inmobiliaria | Merida Mexico
+constructora | Guadalajara Mexico
+agencia de seguros | Monterrey Mexico
+empresa de transporte de carga | Ciudad de Mexico
+despacho juridico | Guadalajara Mexico
+notaria publica | Puebla Mexico

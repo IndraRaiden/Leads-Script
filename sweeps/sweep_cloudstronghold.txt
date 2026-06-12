@@ -1,0 +1,12 @@
+# CloudSH (stronghold-apps/cloudstronghold) sweep — file-intelligence SaaS prospects.
+# Verticals that drown in WhatsApp photos / document dumps / cloud-folder chaos,
+# paired with cities proven to have high weak-digital-presence rates.
+# Run with: python leads_scraper.py --sweep sweeps/sweep_cloudstronghold.txt -n 15
+public insurance adjuster | Oklahoma City OK
+general contractor | El Paso TX
+freight broker | Tulsa OK
+customs broker | El Paso TX
+property management company | Knoxville TN
+bookkeeping service | Bakersfield CA
+construction company | Cincinnati OH
+trucking company | Detroit MI

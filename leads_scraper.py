@@ -22,6 +22,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
+import phonenumbers
 from playwright.async_api import async_playwright
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
@@ -36,7 +37,9 @@ HOT_FILE = OUTPUT_DIR / "HOT_leads_only.csv"
 
 FIELDS = [
     "lead_score", "lead_reasons", "name", "category", "address",
-    "phone", "website", "has_website", "rating", "reviews",
+    "phone", "phone_e164", "phone_valid", "whatsapp",
+    "business_status", "last_review",
+    "website", "has_website", "rating", "reviews",
     "search_query", "search_location", "scraped_date", "maps_url",
 ]
 
@@ -78,6 +81,33 @@ def clean_text(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def region_for(location: str) -> str:
+    return "MX" if re.search(r"mexico|cdmx|méxico", location, re.IGNORECASE) else "US"
+
+
+def validate_phone(phone: str, location: str) -> tuple[str, bool]:
+    """Validate a scraped phone against the national numbering plan.
+
+    Returns (e164, valid). Kills malformed, incomplete, or impossible numbers
+    so wa.me links are only generated for numbers that can actually exist.
+    """
+    if not phone.strip():
+        return "", False
+    try:
+        parsed = phonenumbers.parse(phone, region_for(location))
+        if phonenumbers.is_valid_number(parsed):
+            return phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164), True
+    except phonenumbers.NumberParseException:
+        pass
+    return "", False
+
+
+def whatsapp_link(phone: str, location: str) -> str:
+    """Build a wa.me link from a scraped phone — only if the number is valid."""
+    e164, valid = validate_phone(phone, location)
+    return f"https://wa.me/{e164.lstrip('+')}" if valid else ""
+
+
 def parse_reviews(text: str) -> int | None:
     text = text.replace(",", "").replace(".", "")
     match = re.search(r"(\d+)", text)
@@ -97,6 +127,11 @@ async def scrape_listing(page, url: str, query: str, location: str) -> dict:
         "category": "",
         "address": "",
         "phone": "",
+        "phone_e164": "",
+        "phone_valid": False,
+        "whatsapp": "",
+        "business_status": "open",
+        "last_review": "",
         "website": "",
         "has_website": False,
         "rating": None,
@@ -167,8 +202,40 @@ async def scrape_listing(page, url: str, query: str, location: str) -> dict:
         except Exception:
             pass
 
+        try:
+            wa = page.locator('a[href*="wa.me"], a[href*="api.whatsapp.com"]').first
+            if await wa.count() > 0:
+                href = await wa.get_attribute("href", timeout=2000)
+                if href:
+                    result["whatsapp"] = href
+        except Exception:
+            pass
+
+        try:
+            closed = page.locator(
+                'span:has-text("Permanently closed"), span:has-text("Temporarily closed")'
+            ).first
+            if await closed.count() > 0:
+                txt = clean_text(await closed.inner_text(timeout=2000)).lower()
+                result["business_status"] = "permanently_closed" if "permanently" in txt else "temporarily_closed"
+        except Exception:
+            pass
+
+        try:
+            # Relative date of the most recent visible review ("2 weeks ago") —
+            # activity signal that the listing (and its phone) is current.
+            review_date = page.locator('div[data-review-id] span:text-matches("ago$")').first
+            if await review_date.count() > 0:
+                result["last_review"] = clean_text(await review_date.inner_text(timeout=2000))
+        except Exception:
+            pass
+
     except Exception as e:
         console.print(f"[yellow]Warning scraping {url}: {e}[/yellow]")
+
+    result["phone_e164"], result["phone_valid"] = validate_phone(result["phone"], location)
+    if not result["whatsapp"] and result["phone_valid"]:
+        result["whatsapp"] = whatsapp_link(result["phone"], location)
 
     score, reasons = score_lead(result["has_website"], result["reviews"], result["rating"])
     result["lead_score"] = score
@@ -332,7 +399,11 @@ def update_master(leads: list[dict]) -> tuple[int, int, int]:
         writer.writeheader()
         writer.writerows(combined)
 
-    hot = [r for r in combined if int(r["lead_score"] or 0) >= 5]
+    hot = [
+        r for r in combined
+        if int(r["lead_score"] or 0) >= 5
+        and r.get("business_status", "open") != "permanently_closed"
+    ]
     with open(HOT_FILE, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
         writer.writeheader()
