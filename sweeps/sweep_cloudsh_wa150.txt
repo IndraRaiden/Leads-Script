@@ -1,0 +1,39 @@
+# CloudSH — barrido amplio para 150 nuevos con WhatsApp.
+# Verticales que reciben docs de clientes por WA y usan CELULAR (agentes/admins):
+# inmobiliarias, administradoras de condominios, despachos jurídicos. Ciudades variadas.
+
+inmobiliaria | Merida Mexico
+inmobiliaria | Cancun Mexico
+inmobiliaria | Toluca Mexico
+inmobiliaria | Aguascalientes Mexico
+inmobiliaria | San Luis Potosi Mexico
+inmobiliaria | Morelia Mexico
+inmobiliaria | Chihuahua Mexico
+inmobiliaria | Hermosillo Mexico
+inmobiliaria | Culiacan Mexico
+inmobiliaria | Veracruz Mexico
+inmobiliaria | Puebla Mexico
+inmobiliaria | Tijuana Mexico
+
+administradora de condominios | Merida Mexico
+administradora de condominios | Cancun Mexico
+administradora de condominios | Queretaro Mexico
+administradora de condominios | Puebla Mexico
+administradora de condominios | Toluca Mexico
+administradora de condominios | San Luis Potosi Mexico
+administradora de condominios | Aguascalientes Mexico
+administradora de condominios | Tijuana Mexico
+
+despacho de abogados | Merida Mexico
+despacho de abogados | Cancun Mexico
+despacho de abogados | Queretaro Mexico
+despacho de abogados | Puebla Mexico
+despacho de abogados | Toluca Mexico
+despacho de abogados | San Luis Potosi Mexico
+despacho de abogados | Leon Mexico
+despacho de abogados | Aguascalientes Mexico
+
+transporte de carga | Queretaro Mexico
+transporte de carga | Puebla Mexico
+transporte de carga | San Luis Potosi Mexico
+fletes y mudanzas | Merida Mexico

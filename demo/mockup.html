@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>CloudSH — Mockup demo</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --ink:#000; --card:#0B0C10; --card2:#101218;
+    --text:#F4F5F7; --body:#C8CAD0; --muted:#7C808A;
+    --brand:#00FF88; --brand-dim:rgba(0,255,136,0.08); --brand-glow:rgba(0,255,136,0.22);
+    --accent:#8B5CF6;
+    --line:rgba(255,255,255,0.09); --line-soft:rgba(255,255,255,0.05);
+    --wa:#25D366;
+  }
+  body { background:#1a1a1a; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .screen {
+    width:1400px; height:900px; background:var(--ink); color:var(--text);
+    display:flex; overflow:hidden; position:relative; margin-bottom:40px;
+  }
+  /* ---------- sidebar ---------- */
+  .sidebar {
+    width:230px; background:#050608; border-right:1px solid var(--line);
+    padding:28px 18px; display:flex; flex-direction:column; gap:6px; flex-shrink:0;
+  }
+  .logo { display:flex; align-items:center; gap:10px; margin-bottom:30px; padding-left:8px; }
+  .logo-mark {
+    width:34px; height:34px; border-radius:9px;
+    background:linear-gradient(135deg, var(--brand) 0%, #00B86B 100%);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; color:#000; font-size:17px;
+  }
+  .logo-name { font-weight:700; font-size:17px; letter-spacing:0.3px; }
+  .logo-name span { color:var(--brand); }
+  .nav-item {
+    padding:11px 14px; border-radius:9px; color:var(--muted); font-size:14px;
+    display:flex; align-items:center; gap:11px; font-weight:500;
+  }
+  .nav-item.active { background:var(--brand-dim); color:var(--brand); }
+  .nav-item .ico { width:18px; text-align:center; opacity:0.9; }
+  .sidebar .spacer { flex:1; }
+  .user-chip { display:flex; align-items:center; gap:10px; padding:10px 12px; border-top:1px solid var(--line-soft); }
+  .user-ava { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),#4C1D95);
+    display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+  .user-chip .nm { font-size:13px; font-weight:600; }
+  .user-chip .rl { font-size:11px; color:var(--muted); }
+  /* ---------- main ---------- */
+  .main { flex:1; display:flex; flex-direction:column; }
+  .topbar {
+    height:74px; border-bottom:1px solid var(--line); display:flex; align-items:center;
+    padding:0 36px; gap:18px; flex-shrink:0;
+  }
+  .topbar h1 { font-size:21px; font-weight:700; letter-spacing:-0.2px; }
+  .topbar .sub { font-size:13px; color:var(--muted); margin-top:3px; font-weight:400; }
+  .live-badge {
+    margin-left:auto; display:flex; align-items:center; gap:8px;
+    background:var(--brand-dim); border:1px solid rgba(0,255,136,0.25);
+    color:var(--brand); font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:99px;
+  }
+  .live-dot { width:8px; height:8px; border-radius:50%; background:var(--brand); box-shadow:0 0 8px var(--brand); }
+  .content { flex:1; padding:30px 36px; overflow:hidden; }
+  /* ---------- screen 1: inbox ---------- */
+  .feed { display:flex; flex-direction:column; gap:14px; }
+  .feed-card {
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:18px 20px; display:flex; gap:18px; align-items:center;
+  }
+  .feed-card.new { border-color:rgba(0,255,136,0.35); box-shadow:0 0 24px rgba(0,255,136,0.06); }
+  .thumb {
+    width:78px; height:78px; border-radius:10px; flex-shrink:0; position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; font-size:26px;
+  }
+  .thumb.recibo { background:linear-gradient(160deg,#1c2620,#0f1411); border:1px solid rgba(0,255,136,0.2); }
+  .thumb.foto   { background:linear-gradient(160deg,#26201c,#14110f); border:1px solid rgba(255,170,0,0.25); }
+  .thumb.pdf    { background:linear-gradient(160deg,#261c26,#140f14); border:1px solid rgba(139,92,246,0.3); }
+  .wa-corner {
+    position:absolute; bottom:4px; right:4px; width:20px; height:20px; border-radius:50%;
+    background:var(--wa); display:flex; align-items:center; justify-content:center; font-size:11px;
+  }
+  .feed-info { flex:1; min-width:0; }
+  .feed-from { font-size:14.5px; font-weight:600; margin-bottom:5px; }
+  .feed-from .via { color:var(--muted); font-weight:400; font-size:12.5px; }
+  .chips { display:flex; gap:8px; flex-wrap:wrap; }
+  .chip {
+    font-size:12px; padding:5px 11px; border-radius:99px; font-weight:600;
+    background:rgba(255,255,255,0.05); border:1px solid var(--line); color:var(--body);
+  }
+  .chip.green { background:var(--brand-dim); border-color:rgba(0,255,136,0.25); color:var(--brand); }
+  .chip.violet { background:rgba(139,92,246,0.1); border-color:rgba(139,92,246,0.35); color:#B79CFF; }
+  .feed-dest { text-align:right; flex-shrink:0; }
+  .feed-dest .lbl { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px; }
+  .feed-dest .path { font-size:13px; color:var(--brand); font-weight:600; }
+  .feed-dest .time { font-size:12px; color:var(--muted); margin-top:6px; }
+  .banner {
+    background:linear-gradient(90deg, var(--brand-dim), transparent); border:1px solid rgba(0,255,136,0.2);
+    border-radius:12px; padding:14px 20px; margin-bottom:20px; font-size:14px; color:var(--body);
+    display:flex; align-items:center; gap:12px;
+  }
+  .banner b { color:var(--brand); }
+  /* ---------- screen 2: expedientes ---------- */
+  .stats-row { display:flex; gap:16px; margin-bottom:24px; }
+  .stat {
+    flex:1; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 22px;
+  }
+  .stat .num { font-size:30px; font-weight:800; letter-spacing:-1px; }
+  .stat .num.g { color:var(--brand); }
+  .stat .num.v { color:#B79CFF; }
+  .stat .lab { font-size:13px; color:var(--muted); margin-top:4px; }
+  .folder-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .folder {
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 22px;
+  }
+  .folder-top { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .folder-ico {
+    width:42px; height:42px; border-radius:10px; background:var(--brand-dim);
+    border:1px solid rgba(0,255,136,0.2); display:flex; align-items:center; justify-content:center; font-size:19px;
+  }
+  .folder-name { font-size:15px; font-weight:700; }
+  .folder-meta { font-size:12.5px; color:var(--muted); margin-top:2px; }
+  .bar { height:7px; border-radius:99px; background:rgba(255,255,255,0.07); overflow:hidden; margin:12px 0 8px; }
+  .bar > div { height:100%; border-radius:99px; background:linear-gradient(90deg,#00B86B,var(--brand)); }
+  .bar.warn > div { background:linear-gradient(90deg,#B8860B,#FFC93C); }
+  .folder-foot { display:flex; justify-content:space-between; font-size:12.5px; color:var(--body); }
+  .folder-foot .ok { color:var(--brand); font-weight:600; }
+  .folder-foot .warn { color:#FFC93C; font-weight:600; }
+  /* ---------- screen 3: búsqueda ---------- */
+  .search-wrap { max-width:860px; margin:30px auto 0; }
+  .search-box {
+    display:flex; align-items:center; gap:14px; background:var(--card2);
+    border:1.5px solid rgba(0,255,136,0.4); border-radius:16px; padding:20px 26px;
+    box-shadow:0 0 40px rgba(0,255,136,0.07); margin-bottom:14px;
+  }
+  .search-box .q { font-size:19px; font-weight:500; }
+  .search-box .cursor { display:inline-block; width:2px; height:24px; background:var(--brand); vertical-align:middle; margin-left:2px; }
+  .search-meta { font-size:13px; color:var(--muted); margin:0 4px 18px; }
+  .search-meta b { color:var(--brand); }
+  .result {
+    display:flex; gap:16px; align-items:center; background:var(--card); border:1px solid var(--line);
+    border-radius:13px; padding:16px 20px; margin-bottom:12px;
+  }
+  .result:first-of-type { border-color:rgba(0,255,136,0.3); }
+  .result .r-thumb {
+    width:56px; height:56px; border-radius:9px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:22px;
+  }
+  .result .r-title { font-size:14.5px; font-weight:600; margin-bottom:4px; }
+  .result .r-title mark { background:transparent; color:var(--brand); }
+  .result .r-sub { font-size:12.5px; color:var(--muted); }
+  .result .r-right { margin-left:auto; text-align:right; flex-shrink:0; }
+  .result .r-score { font-size:12px; color:var(--brand); font-weight:700; }
+  .result .r-date { font-size:12px; color:var(--muted); margin-top:4px; }
+  /* ---------- screen 4: pendientes ---------- */
+  .table { background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  .trow { display:flex; align-items:center; padding:16px 24px; border-bottom:1px solid var(--line-soft); gap:18px; }
+  .trow.head { background:rgba(255,255,255,0.03); font-size:11.5px; text-transform:uppercase; letter-spacing:0.8px; color:var(--muted); font-weight:700; padding:13px 24px; }
+  .trow:last-child { border-bottom:none; }
+  .c1 { flex:2.2; } .c2 { flex:2.4; } .c3 { flex:1.6; } .c4 { flex:1.6; text-align:right; }
+  .trow .who { font-size:14.5px; font-weight:600; }
+  .trow .who small { display:block; font-size:12px; color:var(--muted); font-weight:400; margin-top:3px; }
+  .miss { font-size:13.5px; color:var(--body); }
+  .pill { display:inline-block; font-size:12px; font-weight:600; padding:5px 12px; border-radius:99px; }
+  .pill.red { background:rgba(255,90,90,0.1); border:1px solid rgba(255,90,90,0.3); color:#FF8484; }
+  .pill.yellow { background:rgba(255,201,60,0.08); border:1px solid rgba(255,201,60,0.3); color:#FFC93C; }
+  .btn-wa {
+    display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700;
+    background:var(--brand-dim); border:1px solid rgba(0,255,136,0.35); color:var(--brand);
+    padding:8px 15px; border-radius:9px;
+  }
+  .footer-note {
+    margin-top:18px; font-size:13px; color:var(--muted); display:flex; align-items:center; gap:10px;
+  }
+  .footer-note b { color:var(--brand); }
+  /* tagline footer en cada pantalla */
+  .tagline {
+    position:absolute; bottom:0; left:230px; right:0; height:46px;
+    border-top:1px solid var(--line-soft); display:flex; align-items:center; justify-content:center;
+    font-size:13px; color:var(--muted); background:rgba(0,0,0,0.6); letter-spacing:0.2px;
+  }
+  .tagline b { color:var(--brand); margin:0 5px; }
+</style>
+</head>
+<body>
+
+<!-- ============ PANTALLA 1: ENTRADA WHATSAPP ============ -->
+<div class="screen" id="s1">
+  <div class="sidebar">
+    <div class="logo"><div class="logo-mark">C</div><div class="logo-name">Cloud<span>SH</span></div></div>
+    <div class="nav-item active"><span class="ico">📥</span> Entrada</div>
+    <div class="nav-item"><span class="ico">🗂️</span> Expedientes</div>
+    <div class="nav-item"><span class="ico">🔍</span> Buscar</div>
+    <div class="nav-item"><span class="ico">⏰</span> Pendientes</div>
+    <div class="spacer"></div>
+    <div class="user-chip"><div class="user-ava">LB</div><div><div class="nm">LLBM Admin.</div><div class="rl">Plan Negocio</div></div></div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div><h1>Entrada</h1><div class="sub">Todo lo que llega por WhatsApp, capturado y clasificado solo</div></div>
+      <div class="live-badge"><div class="live-dot"></div>Conectado a WhatsApp</div>
+    </div>
+    <div class="content">
+      <div class="banner">⚡ <span><b>14 archivos</b> recibidos hoy por WhatsApp — clasificados automáticamente, <b>0 tocados a mano</b></span></div>
+      <div class="feed">
+        <div class="feed-card new">
+          <div class="thumb recibo">🧾<div class="wa-corner">✓</div></div>
+          <div class="feed-info">
+            <div class="feed-from">Juan Pérez — Depto 302 <span class="via">· foto por WhatsApp</span></div>
+            <div class="chips">
+              <span class="chip green">Comprobante de pago</span>
+              <span class="chip">$4,500.00</span>
+              <span class="chip">Cuota junio 2026</span>
+              <span class="chip violet">Leído por IA</span>
+            </div>
+          </div>
+          <div class="feed-dest"><div class="lbl">Archivado en</div><div class="path">Torre A / 302 / Pagos</div><div class="time">hace 2 min</div></div>
+        </div>
+        <div class="feed-card">
+          <div class="thumb foto">📸<div class="wa-corner">✓</div></div>
+          <div class="feed-info">
+            <div class="feed-from">Chofer Raúl M. <span class="via">· 3 fotos por WhatsApp</span></div>
+            <div class="chips">
+              <span class="chip green">Evidencia de entrega</span>
+              <span class="chip">Pedido #4821</span>
+              <span class="chip">Monterrey, NL</span>
+              <span class="chip violet">Leído por IA</span>
+            </div>
+          </div>
+          <div class="feed-dest"><div class="lbl">Archivado en</div><div class="path">Transportes Norte / Entregas</div><div class="time">hace 18 min</div></div>
+        </div>
+        <div class="feed-card">
+          <div class="thumb pdf">📄<div class="wa-corner">✓</div></div>
+          <div class="feed-info">
+            <div class="feed-from">Lic. Sandra V. <span class="via">· PDF por WhatsApp</span></div>
+            <div class="chips">
+              <span class="chip green">Contrato firmado</span>
+              <span class="chip">Exp. 2026-114</span>
+              <span class="chip violet">Leído por IA</span>
+            </div>
+          </div>
+          <div class="feed-dest"><div class="lbl">Archivado en</div><div class="path">Clientes / García / Contratos</div><div class="time">hace 41 min</div></div>
+        </div>
+        <div class="feed-card">
+          <div class="thumb recibo">🧾<div class="wa-corner">✓</div></div>
+          <div class="feed-info">
+            <div class="feed-from">María L. — Depto 117 <span class="via">· foto por WhatsApp</span></div>
+            <div class="chips">
+              <span class="chip green">Comprobante de pago</span>
+              <span class="chip">$3,800.00</span>
+              <span class="chip">Cuota junio 2026</span>
+              <span class="chip violet">Leído por IA</span>
+            </div>
+          </div>
+          <div class="feed-dest"><div class="lbl">Archivado en</div><div class="path">Torre B / 117 / Pagos</div><div class="time">hace 1 h</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tagline">La gente sigue mandando todo por WhatsApp —<b>CloudSH</b> lo recibe, lo lee y lo archiva por ti</div>
+</div>
+
+<!-- ============ PANTALLA 2: EXPEDIENTES ============ -->
+<div class="screen" id="s2">
+  <div class="sidebar">
+    <div class="logo"><div class="logo-mark">C</div><div class="logo-name">Cloud<span>SH</span></div></div>
+    <div class="nav-item"><span class="ico">📥</span> Entrada</div>
+    <div class="nav-item active"><span class="ico">🗂️</span> Expedientes</div>
+    <div class="nav-item"><span class="ico">🔍</span> Buscar</div>
+    <div class="nav-item"><span class="ico">⏰</span> Pendientes</div>
+    <div class="spacer"></div>
+    <div class="user-chip"><div class="user-ava">LB</div><div><div class="nm">LLBM Admin.</div><div class="rl">Plan Negocio</div></div></div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div><h1>Expedientes</h1><div class="sub">Cada cliente con su carpeta, armada sola con lo que llega</div></div>
+      <div class="live-badge"><div class="live-dot"></div>Al día</div>
+    </div>
+    <div class="content">
+      <div class="stats-row">
+        <div class="stat"><div class="num g">312</div><div class="lab">Documentos este mes</div></div>
+        <div class="stat"><div class="num">38</div><div class="lab">Expedientes activos</div></div>
+        <div class="stat"><div class="num v">100%</div><div class="lab">Clasificados sin tocar</div></div>
+        <div class="stat"><div class="num g">~6 h</div><div class="lab">Ahorradas por semana</div></div>
+      </div>
+      <div class="folder-grid">
+        <div class="folder">
+          <div class="folder-top"><div class="folder-ico">🏢</div><div><div class="folder-name">Torre A — Junio</div><div class="folder-meta">Comprobantes de cuota</div></div></div>
+          <div class="bar"><div style="width:88%"></div></div>
+          <div class="folder-foot"><span class="ok">28 / 32 al corriente</span><span>4 pendientes</span></div>
+        </div>
+        <div class="folder">
+          <div class="folder-top"><div class="folder-ico">🚛</div><div><div class="folder-name">Transportes Norte</div><div class="folder-meta">Evidencias de entrega</div></div></div>
+          <div class="bar"><div style="width:96%"></div></div>
+          <div class="folder-foot"><span class="ok">47 / 49 con evidencia</span><span>2 pendientes</span></div>
+        </div>
+        <div class="folder">
+          <div class="folder-top"><div class="folder-ico">⚖️</div><div><div class="folder-name">Exp. 2026-114 García</div><div class="folder-meta">Documentos del caso</div></div></div>
+          <div class="bar"><div style="width:100%"></div></div>
+          <div class="folder-foot"><span class="ok">Expediente completo</span><span>23 docs</span></div>
+        </div>
+        <div class="folder">
+          <div class="folder-top"><div class="folder-ico">🏢</div><div><div class="folder-name">Torre B — Junio</div><div class="folder-meta">Comprobantes de cuota</div></div></div>
+          <div class="bar warn"><div style="width:64%"></div></div>
+          <div class="folder-foot"><span class="warn">18 / 28 al corriente</span><span>10 pendientes</span></div>
+        </div>
+        <div class="folder">
+          <div class="folder-top"><div class="folder-ico">🚛</div><div><div class="folder-name">Fletes Bajío</div><div class="folder-meta">Evidencias + facturas</div></div></div>
+          <div class="bar"><div style="width:91%"></div></div>
+          <div class="folder-foot"><span class="ok">31 / 34 con evidencia</span><span>3 pendientes</span></div>
+        </div>
+        <div class="folder">
+          <div class="folder-top"><div class="folder-ico">🏗️</div><div><div class="folder-name">Obra Reforma 220</div><div class="folder-meta">Avances y comprobantes</div></div></div>
+          <div class="bar"><div style="width:78%"></div></div>
+          <div class="folder-foot"><span class="ok">Al día</span><span>56 docs</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tagline">Nada de carpetas a mano: <b>CloudSH</b> arma el expediente de cada cliente conforme llegan las cosas</div>
+</div>
+
+<!-- ============ PANTALLA 3: BÚSQUEDA ============ -->
+<div class="screen" id="s3">
+  <div class="sidebar">
+    <div class="logo"><div class="logo-mark">C</div><div class="logo-name">Cloud<span>SH</span></div></div>
+    <div class="nav-item"><span class="ico">📥</span> Entrada</div>
+    <div class="nav-item"><span class="ico">🗂️</span> Expedientes</div>
+    <div class="nav-item active"><span class="ico">🔍</span> Buscar</div>
+    <div class="nav-item"><span class="ico">⏰</span> Pendientes</div>
+    <div class="spacer"></div>
+    <div class="user-chip"><div class="user-ava">LB</div><div><div class="nm">LLBM Admin.</div><div class="rl">Plan Negocio</div></div></div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div><h1>Buscar</h1><div class="sub">Escribe como hablas — CloudSH entiende qué buscas</div></div>
+    </div>
+    <div class="content">
+      <div class="search-wrap">
+        <div class="search-box"><span style="font-size:20px">🔍</span><span class="q">comprobante del 302 de mayo<span class="cursor"></span></span></div>
+        <div class="search-meta">3 resultados en <b>0.4 segundos</b> — buscó dentro de las fotos, no solo en nombres de archivo</div>
+        <div class="result">
+          <div class="r-thumb thumb recibo" style="width:56px;height:56px;font-size:22px">🧾</div>
+          <div><div class="r-title">Comprobante de pago — <mark>Depto 302</mark> — <mark>mayo 2026</mark></div>
+          <div class="r-sub">Foto de WhatsApp de Juan Pérez · $4,500.00 · Torre A / 302 / Pagos</div></div>
+          <div class="r-right"><div class="r-score">Coincidencia exacta</div><div class="r-date">08 may 2026</div></div>
+        </div>
+        <div class="result">
+          <div class="r-thumb thumb recibo" style="width:56px;height:56px;font-size:22px">🧾</div>
+          <div><div class="r-title">Transferencia SPEI — <mark>Depto 302</mark> — abril 2026</div>
+          <div class="r-sub">Captura de pantalla · $4,500.00 · Torre A / 302 / Pagos</div></div>
+          <div class="r-right"><div class="r-score">Relacionado</div><div class="r-date">09 abr 2026</div></div>
+        </div>
+        <div class="result">
+          <div class="r-thumb thumb pdf" style="width:56px;height:56px;font-size:22px">📄</div>
+          <div><div class="r-title">Estado de cuenta — <mark>Depto 302</mark> — 2026</div>
+          <div class="r-sub">Generado por CloudSH · 5 pagos registrados</div></div>
+          <div class="r-right"><div class="r-score">Relacionado</div><div class="r-date">01 jun 2026</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tagline">Se acabó el scroll infinito en el chat: <b>CloudSH</b> encuentra cualquier papel en segundos</div>
+</div>
+
+<!-- ============ PANTALLA 4: PENDIENTES ============ -->
+<div class="screen" id="s4">
+  <div class="sidebar">
+    <div class="logo"><div class="logo-mark">C</div><div class="logo-name">Cloud<span>SH</span></div></div>
+    <div class="nav-item"><span class="ico">📥</span> Entrada</div>
+    <div class="nav-item"><span class="ico">🗂️</span> Expedientes</div>
+    <div class="nav-item"><span class="ico">🔍</span> Buscar</div>
+    <div class="nav-item active"><span class="ico">⏰</span> Pendientes</div>
+    <div class="spacer"></div>
+    <div class="user-chip"><div class="user-ava">LB</div><div><div class="nm">LLBM Admin.</div><div class="rl">Plan Negocio</div></div></div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div><h1>Pendientes</h1><div class="sub">CloudSH detecta solo a quién le falta mandar algo</div></div>
+      <div class="live-badge"><div class="live-dot"></div>6 por cobrar</div>
+    </div>
+    <div class="content">
+      <div class="table">
+        <div class="trow head"><div class="c1">Quién</div><div class="c2">Qué falta</div><div class="c3">Estado</div><div class="c4">Acción</div></div>
+        <div class="trow">
+          <div class="c1"><div class="who">Depto 204 — Torre B<small>Sra. Carmen R.</small></div></div>
+          <div class="c2"><div class="miss">Comprobante cuota junio ($3,800)</div></div>
+          <div class="c3"><span class="pill red">12 días de retraso</span></div>
+          <div class="c4"><span class="btn-wa">💬 Recordar por WhatsApp</span></div>
+        </div>
+        <div class="trow">
+          <div class="c1"><div class="who">Pedido #4807<small>Transportes Norte · chofer Luis G.</small></div></div>
+          <div class="c2"><div class="miss">Evidencia de entrega (foto firmada)</div></div>
+          <div class="c3"><span class="pill yellow">2 días sin evidencia</span></div>
+          <div class="c4"><span class="btn-wa">💬 Pedir foto</span></div>
+        </div>
+        <div class="trow">
+          <div class="c1"><div class="who">Exp. 2026-098<small>Cliente Hernández</small></div></div>
+          <div class="c2"><div class="miss">INE y comprobante de domicilio</div></div>
+          <div class="c3"><span class="pill yellow">Solicitado hace 4 días</span></div>
+          <div class="c4"><span class="btn-wa">💬 Recordar</span></div>
+        </div>
+        <div class="trow">
+          <div class="c1"><div class="who">Depto 110 — Torre B<small>Sr. Arturo M.</small></div></div>
+          <div class="c2"><div class="miss">Comprobante cuota junio ($3,800)</div></div>
+          <div class="c3"><span class="pill red">8 días de retraso</span></div>
+          <div class="c4"><span class="btn-wa">💬 Recordar por WhatsApp</span></div>
+        </div>
+      </div>
+      <div class="footer-note">⚡ Los recordatorios salen por WhatsApp con un clic — <b>sin perseguir a nadie chat por chat</b></div>
+    </div>
+  </div>
+  <div class="tagline">Tú decides; <b>CloudSH</b> persigue los papeles que faltan por ti</div>
+</div>
+
+</body>
+</html>

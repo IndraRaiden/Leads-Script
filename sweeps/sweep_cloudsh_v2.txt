@@ -1,0 +1,51 @@
+# Sweep CloudSH v2 — mezcla mejorada según fit de producto + datos del v1.
+# Patrón ideal: negocios que cobran a MUCHAS personas y reciben comprobante por WA.
+#
+# ➕ NUEVOS gemelos del dolor de conciliación: escuelas, gimnasios, financieras.
+# ⬆️ Sube jurídico (califica alto) e inmobiliarias.
+# ⬇️ Baja fletes chicos (responden pero poca capacidad de pago).
+# 🔁 Condominios en más ciudades (Maps tiene pocas).
+
+# --- Escuelas privadas (colegiaturas de cientos de papás por WA) ---
+colegio privado | Ciudad de Mexico
+colegio privado | Guadalajara Mexico
+colegio privado | Monterrey Mexico
+colegio privado | Puebla Mexico
+colegio privado | Queretaro Mexico
+
+# --- Gimnasios / clubes (membresías mensuales) ---
+gimnasio | Ciudad de Mexico
+gimnasio | Guadalajara Mexico
+gimnasio | Monterrey Mexico
+gimnasio | Queretaro Mexico
+
+# --- Financieras / préstamos (alto volumen de comprobantes + INE) ---
+financiera | Ciudad de Mexico
+financiera | Guadalajara Mexico
+financiera | Monterrey Mexico
+
+# --- Condominios (mejor fit; ampliar ciudades por escasez en Maps) ---
+administracion de condominios | Ciudad de Mexico
+administracion de condominios | Guadalajara Mexico
+administracion de condominios | Monterrey Mexico
+administracion de condominios | Cancun Mexico
+administracion de condominios | Puebla Mexico
+administracion de condominios | Queretaro Mexico
+
+# --- Jurídico (calificó alto en v1) ---
+despacho juridico | Ciudad de Mexico
+despacho juridico | Guadalajara Mexico
+despacho juridico | Monterrey Mexico
+despacho juridico | Puebla Mexico
+
+# --- Inmobiliarias (INE, comprobantes de ingresos, contratos) ---
+inmobiliaria | Ciudad de Mexico
+inmobiliaria | Guadalajara Mexico
+inmobiliaria | Monterrey Mexico
+
+# --- Transporte de carga (mediano/grande) ---
+empresa de transporte de carga | Ciudad de Mexico
+empresa de transporte de carga | Monterrey Mexico
+
+# --- Fletes (reducido) ---
+fletes y mudanzas | Ciudad de Mexico

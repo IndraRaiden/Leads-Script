@@ -32,49 +32,192 @@ console = Console()
 
 OUTPUT_DIR = Path("output")
 RUNS_DIR = OUTPUT_DIR / "runs"
-MASTER_FILE = OUTPUT_DIR / "MASTER_leads.csv"
-HOT_FILE = OUTPUT_DIR / "HOT_leads_only.csv"
+# Lista limpia CloudSH (separada del MASTER_leads.csv viejo, que se ignora).
+MASTER_FILE = OUTPUT_DIR / "CLOUDSH_leads.csv"
+HOT_FILE = OUTPUT_DIR / "CLOUDSH_hot.csv"
 
 FIELDS = [
-    "lead_score", "lead_reasons", "name", "category", "address",
-    "phone", "phone_e164", "phone_valid", "whatsapp",
-    "business_status", "last_review",
-    "website", "has_website", "rating", "reviews",
+    "tier", "lead_score", "lead_reasons", "name", "category", "cat_fit", "address",
+    "phone", "phone_e164", "phone_valid", "whatsapp", "wa_listed",
+    "business_status", "has_hours", "last_review", "review_age_days", "photos",
+    "website", "has_website", "formal_name", "rating", "reviews",
     "search_query", "search_location", "scraped_date", "maps_url",
 ]
 
+# Scoring orientado a CloudSH: el lead ideal es un negocio VIVO, en operación,
+# con volumen real de documentos y que usa WhatsApp como canal. (NO el viejo
+# modelo de "presencia digital débil", que servía para vender sitios web.)
+# Base = volumen de reseñas (proxy confiable y barato de "negocio en operación con
+# clientes reales"). Bonus = WhatsApp publicado y actividad reciente si se capturan.
+# Señales confiables que Maps SÍ expone para PyMEs MX: sitio web (formalidad),
+# rating, teléfono válido, abierto/cerrado. El nº de reseñas casi nunca aparece
+# para este segmento, así que es solo bonus cuando existe.
 SCORE_RULES = {
-    "no_website": 5,
-    "low_reviews": 2,      # < 50 reviews
-    "medium_reviews": 1,   # 50–200 reviews
-    "no_rating": 1,
-    "low_rating": 1,       # < 3.5 stars
+    "has_website": 2,       # negocio formal/establecido → más probable que pague SaaS
+    "formal_name": 2,       # razón social (S.C./S.A. de C.V./S. de R.L.) → constituido, factura
+    "wa_listed": 3,         # WhatsApp publicado en Maps → ya usan WA para negocio
+    "has_hours": 1,         # horario publicado → negocio gestionado activamente
+    "photos_active": 1,     # >= 10 fotos → negocio gestionado/activo
+    "off_category": -4,     # categoría fuera del vertical → probable falso positivo
+    "volume_xl": 4,         # >= 50 reseñas → operación seria (bonus, raro)
+    "volume_high": 3,       # 15–49
+    "volume_mid": 2,        # 5–14
+    "volume_low": 1,        # 1–4
+    "rating_great": 2,      # >= 4.5
+    "rating_ok": 1,         # >= 4.0 (negocio real con historia)
+    "active_recent": 2,     # reseña en <= 90 días (bonus)
+    "active_year": 1,       # reseña en <= 1 año (bonus)
+}
+
+# Razón social formal → negocio constituido (capacidad de pago + factura).
+FORMAL_NAME_RE = re.compile(
+    r"\b(s\.?\s?c\.?|s\.?a\.?\s?de\s?c\.?v\.?|s\.?\s?de\s?r\.?l\.?|a\.?\s?c\.?|s\.?a\.?\b|s\.?a\.?s\.?|despacho|asociados|y\s+asociados|corporativo|grupo|bufete)\b",
+    re.IGNORECASE,
+)
+
+
+# Categorías de Maps (en inglés, por hl=en) que SÍ corresponden a cada vertical
+# que engancha. Sirve para descartar falsos positivos (p.ej. "Construction
+# company" cuando buscas administradoras de condominios).
+VERTICAL_CATEGORIES = {
+    "condominio": ["property management", "condominium", "homeowner", "property administ", "real estate"],
+    "fletes": ["moving", "mover", "trucking", "transport", "logistic", "freight", "courier", "relocation"],
+    "mudanzas": ["moving", "mover", "trucking", "transport", "logistic", "relocation"],
+    "transporte": ["trucking", "transport", "logistic", "freight", "shipping", "cargo", "carrier"],
+    "carga": ["trucking", "transport", "logistic", "freight", "shipping", "cargo", "carrier"],
+    "juridico": ["legal", "lawyer", "attorney", "law firm", "notary", "barrister", "solicitor"],
+    "abogado": ["legal", "lawyer", "attorney", "law firm", "barrister", "solicitor"],
+    "despacho": ["legal", "lawyer", "attorney", "law firm", "accountant", "consultant"],
+    "condominios": ["property management", "condominium", "homeowner", "property administ", "real estate"],
+    # Verticales nuevos — gemelos del dolor de conciliación (cobran a muchos).
+    "colegio": ["school", "private school", "education", "college", "kindergarten", "preschool"],
+    "escuela": ["school", "private school", "education", "college", "kindergarten", "preschool"],
+    "gimnasio": ["gym", "fitness", "health club", "sports club", "crossfit"],
+    "club deportivo": ["sports club", "gym", "fitness", "club", "recreation"],
+    "financiera": ["financial", "loan", "credit", "finance", "lender"],
+    "prestamos": ["financial", "loan", "credit", "finance", "lender"],
+    "casa de empeno": ["pawn", "loan", "financial"],
+    "inmobiliaria": ["real estate", "property", "realtor", "realty", "broker"],
+    "seguros": ["insurance", "insurance agency", "insurance broker", "insurance company"],
+    "aseguradora": ["insurance", "insurance agency", "insurance company"],
+    "agente de seguros": ["insurance", "insurance agency", "insurance broker"],
+    "clinica": ["clinic", "medical", "doctor", "dental", "hospital", "laboratory", "diagnostic"],
+    "laboratorio": ["laboratory", "medical", "diagnostic", "clinic"],
 }
 
 
-def score_lead(has_website: bool, reviews: int | None, rating: float | None) -> tuple[int, list[str]]:
+def category_fit(query: str, category: str) -> bool | None:
+    """True/False si la categoría del negocio corresponde al vertical buscado.
+    None si no tenemos categoría o no hay reglas para ese query (no penaliza)."""
+    if not category:
+        return None
+    q = query.lower()
+    expected = []
+    for key, cats in VERTICAL_CATEGORIES.items():
+        if key in q:
+            expected.extend(cats)
+    if not expected:
+        return None
+    cat = category.lower()
+    return any(exp in cat for exp in expected)
+
+
+def score_lead(
+    reviews: int | None,
+    rating: float | None,
+    wa_listed: bool,
+    review_age_days: int | None,
+    business_status: str = "open",
+    has_website: bool = False,
+    photos: int | None = None,
+    cat_fit: bool | None = None,
+    formal_name: bool = False,
+    has_hours: bool = False,
+) -> tuple[int, list[str]]:
+    """Puntúa el ajuste a CloudSH. Mayor = mejor prospecto (formal, real, usa WA)."""
+    if business_status == "permanently_closed":
+        return 0, ["Cerrado permanentemente"]
+
     score = 0
     reasons = []
 
-    if not has_website:
-        score += SCORE_RULES["no_website"]
-        reasons.append("No website")
+    # Categoría fuera del vertical → penaliza fuerte (probable falso positivo).
+    if cat_fit is False:
+        score += SCORE_RULES["off_category"]
+        reasons.append("Fuera de vertical")
 
-    if reviews is None:
-        score += SCORE_RULES["no_rating"]
-        reasons.append("No reviews")
-    elif reviews < 50:
-        score += SCORE_RULES["low_reviews"]
-        reasons.append(f"Only {reviews} reviews")
-    elif reviews <= 200:
-        score += SCORE_RULES["medium_reviews"]
-        reasons.append(f"{reviews} reviews")
+    if has_website:
+        score += SCORE_RULES["has_website"]; reasons.append("Sitio web (formal)")
 
-    if rating is not None and rating < 3.5:
-        score += SCORE_RULES["low_rating"]
-        reasons.append(f"Low rating {rating}")
+    if formal_name:
+        score += SCORE_RULES["formal_name"]; reasons.append("Razón social formal")
+
+    if has_hours:
+        score += SCORE_RULES["has_hours"]; reasons.append("Horario publicado")
+
+    if photos is not None and photos >= 10:
+        score += SCORE_RULES["photos_active"]; reasons.append(f"{photos}+ fotos (activo)")
+
+    if reviews is not None and reviews >= 50:
+        score += SCORE_RULES["volume_xl"]; reasons.append(f"{reviews} reseñas (operación seria)")
+    elif reviews is not None and reviews >= 15:
+        score += SCORE_RULES["volume_high"]; reasons.append(f"{reviews} reseñas")
+    elif reviews is not None and reviews >= 5:
+        score += SCORE_RULES["volume_mid"]; reasons.append(f"{reviews} reseñas")
+    elif reviews is not None and reviews >= 1:
+        score += SCORE_RULES["volume_low"]; reasons.append(f"Solo {reviews} reseñas")
+
+    if rating is not None and rating >= 4.5:
+        score += SCORE_RULES["rating_great"]; reasons.append(f"Rating {rating}")
+    elif rating is not None and rating >= 4.0:
+        score += SCORE_RULES["rating_ok"]; reasons.append(f"Rating {rating}")
+
+    if wa_listed:
+        score += SCORE_RULES["wa_listed"]; reasons.append("WhatsApp en Maps")
+
+    if review_age_days is not None and review_age_days <= 90:
+        score += SCORE_RULES["active_recent"]; reasons.append("Activo (<90d)")
+    elif review_age_days is not None and review_age_days <= 365:
+        score += SCORE_RULES["active_year"]; reasons.append("Activo (<1 año)")
 
     return score, reasons
+
+
+def lead_tier(score: int, phone_valid: bool, cat_fit: bool | None) -> str:
+    """Prioridad para el outreach. A = escribir primero, C = no vale la pena."""
+    if not phone_valid or cat_fit is False:
+        return "C"      # sin teléfono usable o fuera de vertical
+    if score >= 6:
+        return "A"      # negocio formal, real, del vertical → tiro de alta calidad
+    if score >= 4:
+        return "B"      # decente, vale el intento
+    return "C"
+
+
+# Convierte la fecha relativa de la última reseña ("2 weeks ago", "hace 3 meses")
+# a una edad aproximada en días — la señal más fuerte de "negocio vivo".
+_AGE_UNITS = {
+    "day": 1, "día": 1, "dia": 1, "week": 7, "semana": 7,
+    "month": 30, "mes": 30, "year": 365, "año": 365, "ano": 365,
+    "hour": 0, "hora": 0, "minute": 0, "minuto": 0,
+}
+
+
+def review_age_days(text: str) -> int | None:
+    if not text:
+        return None
+    low = text.lower()
+    if re.search(r"\b(a|an|una?|hace un[ao]?)\b", low) and not re.search(r"\d", low):
+        n = 1
+    else:
+        m = re.search(r"(\d+)", low)
+        n = int(m.group(1)) if m else None
+    if n is None:
+        return None
+    for unit, mult in _AGE_UNITS.items():
+        if unit in low:
+            return n * mult
+    return None
 
 
 def clean_text(text: str) -> str:
@@ -123,15 +266,22 @@ def parse_rating(text: str) -> float | None:
 
 async def scrape_listing(page, url: str, query: str, location: str) -> dict:
     result = {
+        "tier": "C",
         "name": "",
         "category": "",
+        "cat_fit": None,
+        "photos": None,
+        "formal_name": False,
+        "has_hours": False,
         "address": "",
         "phone": "",
         "phone_e164": "",
         "phone_valid": False,
         "whatsapp": "",
+        "wa_listed": False,
         "business_status": "open",
         "last_review": "",
+        "review_age_days": None,
         "website": "",
         "has_website": False,
         "rating": None,
@@ -160,21 +310,31 @@ async def scrape_listing(page, url: str, query: str, location: str) -> dict:
         except Exception:
             pass
 
+        # Rating + nº de reseñas viven en el bloque div.F7nice (Maps actual):
+        #   <div class="F7nice"><span><span aria-hidden>4.5</span>..</span>
+        #                       <span><span aria-hidden>(123)</span>..</span></div>
         try:
-            rating_el = page.locator('div[jsaction*="rating"] span[aria-hidden="true"]').first
-            if await rating_el.count() > 0:
-                result["rating"] = parse_rating(await rating_el.inner_text(timeout=3000))
+            nums = await page.locator('div.F7nice span[aria-hidden="true"]').all_inner_texts()
+            if nums:
+                result["rating"] = parse_rating(nums[0])
+            if len(nums) > 1:
+                result["reviews"] = parse_reviews(nums[1])
         except Exception:
             pass
 
-        try:
-            reviews_el = page.locator('span[aria-label*="review"], span[aria-label*="reseña"]').first
-            if await reviews_el.count() > 0:
-                label = await reviews_el.get_attribute("aria-label", timeout=3000)
-                if label:
-                    result["reviews"] = parse_reviews(label)
-        except Exception:
-            pass
+        # Respaldo del conteo por aria-label (varía por idioma).
+        if result["reviews"] is None:
+            try:
+                rev = page.locator(
+                    'div.F7nice span[aria-label*="review"], div.F7nice span[aria-label*="reseña"], '
+                    'button[aria-label*="review"], button[aria-label*="reseña"]'
+                ).first
+                if await rev.count() > 0:
+                    label = await rev.get_attribute("aria-label", timeout=2000)
+                    if label:
+                        result["reviews"] = parse_reviews(label)
+            except Exception:
+                pass
 
         try:
             addr = page.locator('button[data-item-id="address"]').first
@@ -208,6 +368,7 @@ async def scrape_listing(page, url: str, query: str, location: str) -> dict:
                 href = await wa.get_attribute("href", timeout=2000)
                 if href:
                     result["whatsapp"] = href
+                    result["wa_listed"] = True  # publicado en Maps = usan WA para negocio
         except Exception:
             pass
 
@@ -224,9 +385,36 @@ async def scrape_listing(page, url: str, query: str, location: str) -> dict:
         try:
             # Relative date of the most recent visible review ("2 weeks ago") —
             # activity signal that the listing (and its phone) is current.
-            review_date = page.locator('div[data-review-id] span:text-matches("ago$")').first
+            review_date = page.locator(
+                'div[data-review-id] span:text-matches("ago$"), '
+                'div[data-review-id] span:text-matches("hace")'
+            ).first
             if await review_date.count() > 0:
                 result["last_review"] = clean_text(await review_date.inner_text(timeout=2000))
+                result["review_age_days"] = review_age_days(result["last_review"])
+        except Exception:
+            pass
+
+        # Nº de fotos del negocio (señal de listing gestionado/activo). El botón
+        # del hero suele traer un aria-label tipo "Photo of X · 1 of 42".
+        try:
+            hero = page.locator('button[jsaction*="heroHeaderImage"], div[role="img"][aria-label*="Photo"]').first
+            if await hero.count() > 0:
+                label = await hero.get_attribute("aria-label", timeout=1500) or ""
+                m = re.search(r"of\s+(\d+)", label) or re.search(r"(\d+)\s+photo", label, re.IGNORECASE)
+                if m:
+                    result["photos"] = int(m.group(1))
+        except Exception:
+            pass
+
+        # Horario publicado → negocio gestionado activamente.
+        try:
+            hours = page.locator(
+                'button[data-item-id*="oh"], [aria-label*="Hours"], [jsaction*="openhours"], '
+                'span:has-text("Open"), span:has-text("Closed"), span:has-text("Abierto"), span:has-text("Cerrado")'
+            ).first
+            if await hours.count() > 0:
+                result["has_hours"] = True
         except Exception:
             pass
 
@@ -237,9 +425,16 @@ async def scrape_listing(page, url: str, query: str, location: str) -> dict:
     if not result["whatsapp"] and result["phone_valid"]:
         result["whatsapp"] = whatsapp_link(result["phone"], location)
 
-    score, reasons = score_lead(result["has_website"], result["reviews"], result["rating"])
+    result["cat_fit"] = category_fit(query, result["category"])
+    result["formal_name"] = bool(FORMAL_NAME_RE.search(result["name"]))
+    score, reasons = score_lead(
+        result["reviews"], result["rating"], result["wa_listed"],
+        result["review_age_days"], result["business_status"], result["has_website"],
+        result["photos"], result["cat_fit"], result["formal_name"], result["has_hours"],
+    )
     result["lead_score"] = score
     result["lead_reasons"] = " | ".join(reasons)
+    result["tier"] = lead_tier(score, result["phone_valid"], result["cat_fit"])
 
     return result
 
@@ -349,8 +544,15 @@ async def run_searches(searches: list[tuple[str, str]], max_results: int, show_b
                     if data["name"] and key not in seen_keys:
                         seen_keys.add(key)
                         leads.append(data)
-                        status = "[red]No website[/red]" if not data["has_website"] else "[dim]Has website[/dim]"
-                        score_color = "green" if data["lead_score"] >= 5 else "yellow" if data["lead_score"] >= 3 else "dim"
+                        signals = []
+                        if data["wa_listed"]:
+                            signals.append("[green]WA[/green]")
+                        if data["review_age_days"] is not None and data["review_age_days"] <= 90:
+                            signals.append("[cyan]activo[/cyan]")
+                        if data["reviews"]:
+                            signals.append(f"[dim]{data['reviews']}rev[/dim]")
+                        status = " ".join(signals) or "[dim]sin señales[/dim]"
+                        score_color = "green" if data["lead_score"] >= 6 else "yellow" if data["lead_score"] >= 4 else "dim"
                         console.print(
                             f"  [{score_color}]Score {data['lead_score']}[/{score_color}] | {status} | {data['name']}"
                         )
@@ -399,11 +601,10 @@ def update_master(leads: list[dict]) -> tuple[int, int, int]:
         writer.writeheader()
         writer.writerows(combined)
 
-    hot = [
-        r for r in combined
-        if int(r["lead_score"] or 0) >= 5
-        and r.get("business_status", "open") != "permanently_closed"
-    ]
+    # Hot = listo para outreach: tier A o B (teléfono usable, en vertical, formal).
+    # Ordenado por tier (A primero) y luego por score.
+    hot = [r for r in combined if r.get("tier") in ("A", "B")]
+    hot.sort(key=lambda r: (r.get("tier", "C"), -int(r["lead_score"] or 0)))
     with open(HOT_FILE, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
         writer.writeheader()

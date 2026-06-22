@@ -1,0 +1,32 @@
+# Black Stronghold v2 — NUEVOS. Más ciudades + más giros con volumen operativo
+# (equipos saturados de papeleo/tickets/seguimiento → candidatos a automatización IA).
+
+# --- giros nuevos en las 3 grandes ---
+agencia aduanal | Ciudad de Mexico
+agencia aduanal | Monterrey Mexico
+importadora | Ciudad de Mexico
+importadora | Guadalajara Mexico
+comercializadora | Ciudad de Mexico
+comercializadora | Monterrey Mexico
+agencia de marketing | Ciudad de Mexico
+agencia de marketing | Guadalajara Mexico
+despacho contable | Ciudad de Mexico
+despacho contable | Monterrey Mexico
+agencia de seguros | Ciudad de Mexico
+agencia de seguros | Guadalajara Mexico
+fulfillment ecommerce | Ciudad de Mexico
+empresa de manufactura | Monterrey Mexico
+laboratorio clinico | Ciudad de Mexico
+
+# --- ciudades nuevas, giros core ---
+empresa de logistica | Queretaro Mexico
+empresa de logistica | Puebla Mexico
+centro de distribucion | Queretaro Mexico
+call center | Puebla Mexico
+agencia de cobranza | Guadalajara Mexico
+distribuidora | Queretaro Mexico
+distribuidora | Leon Mexico
+empresa de paqueteria | Guadalajara Mexico
+empresa de paqueteria | Monterrey Mexico
+agencia aduanal | Veracruz Mexico
+importadora | Tijuana Mexico

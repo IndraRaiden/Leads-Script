@@ -1,0 +1,21 @@
+# Sweep enfocado CloudSH — solo verticales que enganchan (condominios, fletes,
+# transporte de carga, jurídico) en ciudades MX de mayor densidad.
+# Scoring nuevo: prioriza negocio formal (web), rating sano, abierto, tel válido.
+administracion de condominios | Ciudad de Mexico
+administracion de condominios | Guadalajara Mexico
+administracion de condominios | Monterrey Mexico
+administracion de condominios | Cancun Mexico
+administracion de condominios | Puebla Mexico
+fletes y mudanzas | Ciudad de Mexico
+fletes y mudanzas | Guadalajara Mexico
+fletes y mudanzas | Monterrey Mexico
+fletes y mudanzas | Puebla Mexico
+fletes y mudanzas | Queretaro Mexico
+empresa de transporte de carga | Ciudad de Mexico
+empresa de transporte de carga | Guadalajara Mexico
+empresa de transporte de carga | Monterrey Mexico
+empresa de transporte de carga | Queretaro Mexico
+despacho juridico | Ciudad de Mexico
+despacho juridico | Guadalajara Mexico
+despacho juridico | Monterrey Mexico
+despacho juridico | Puebla Mexico

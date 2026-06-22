@@ -28,63 +28,63 @@ def first_name(name: str) -> str:
     return n or "su negocio"
 
 
-# Cada vertical: lista de plantillas. {n} = nombre del negocio.
-# El dolor de apertura es específico al giro. Sin links ni adjuntos.
+# Cada vertical: plantillas BREVES (1-2 líneas). {n} = nombre del negocio.
+# Gancho de dolor + CTA suave. Sin links ni adjuntos. Ver [[feedback-brief-outreach]].
 TEMPLATES = {
     "fletes": [
-        "Hola, ¿{n}? 👋 Los vi en Google Maps. Pregunta rápida: cuando un cliente les reclama una entrega, ¿qué tan rápido encuentran la foto de evidencia entre todos los chats? Soy Ricardo, de una empresa mexicana de software — estamos armando una herramienta que ordena justo eso y ando platicando con fleteros antes de lanzar. ¿Le late si le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Una duda de campo: ¿cuánto tardan en hallar la foto o el comprobante de una mudanza vieja cuando alguien lo pide? Estoy construyendo algo mexicano que junta todas esas fotos y las ordena por cliente solito. Me sirve mucho la opinión de gente que mueve carga de verdad — ¿se puede?",
-        "Hola {n} 👋 Vi su perfil en Google. Pregunta honesta: ¿se les ha perdido la evidencia de una entrega entre tantos WhatsApp? Ando hablando con fleteros porque estamos por sacar una herramienta que resuelve eso. No les vendo nada hoy, busco que me digan si tiene sentido. ¿Les interesa?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Batallan para encontrar fotos de entregas o cotizaciones viejas en WhatsApp? Hicimos algo que las ordena solo. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Se les pierde la evidencia de una mudanza entre tantos chats? Tenemos algo que la acomoda por cliente. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Pierden tiempo buscando fotos de entregas en WhatsApp? Armamos algo que las ordena. ¿Le late?",
     ],
     "transporte": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta rápida: cuando piden el POD o la foto de una entrega vieja, ¿qué tan fácil es encontrarla entre los chats de los choferes? Soy Ricardo, empresa mexicana de software — estamos por lanzar algo que ordena justo eso y platico con transportistas antes. ¿Le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Duda de colega: ¿cuánto tiempo se va el equipo juntando evidencias de entrega regadas en WhatsApp? Construimos algo que las agrupa por viaje y cliente. Me late mucho su opinión antes de salir — ¿se puede?",
-        "Hola {n} 👋 Vi su perfil en Google. ¿Les ha pasado que un cliente reclama y la foto de la entrega está enterrada en mil chats? Ando hablando con líneas de carga porque sacamos una herramienta para eso. No vendo hoy, pido feedback real. ¿Les interesa verla?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Tardan en hallar el POD o la foto de una entrega entre los chats? Hicimos algo que las ordena por viaje. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Se les regan las evidencias de entrega en WhatsApp? Tenemos algo que las junta solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Pierden tiempo buscando fotos de entregas viejas? Armamos algo que las ordena. ¿Le late?",
     ],
     "contable": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta de colega a colega: ¿cuántas horas se les van cada cierre persiguiendo las facturas y recibos que los clientes mandan en fotos por WhatsApp? Soy Ricardo, empresa mexicana de software — armamos algo que junta y ordena todo eso por cliente. ¿Les interesaría verlo antes de que salga?",
-        "Qué tal {n}, los encontré en Maps. Duda honesta: en temporada, ¿cuánto tiempo pierden bajando comprobantes que llegan por foto y correo desordenados? Estamos construyendo una herramienta mexicana que los acomoda solos por cliente y mes. Su opinión me sirve mucho antes de lanzar — ¿se puede?",
-        "Hola {n} 👋 Vi su despacho en Google. ¿Les toca rearmar el expediente de un cliente juntando fotos de tickets de varios chats? Ando platicando con contadores porque sacamos algo justo para eso. No les vendo hoy, busco feedback. ¿Les late?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Cuánto tiempo se va juntando facturas y recibos que llegan en fotos por WhatsApp? Hicimos algo que los ordena por cliente. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Batallan en el cierre persiguiendo comprobantes regados en chats? Tenemos algo que los acomoda solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Pierden horas bajando tickets de WhatsApp? Armamos algo que los ordena por cliente y mes. ¿Le late?",
     ],
     "juridico": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta rápida: al armar un expediente, ¿cuánto tardan juntando los documentos y fotos que el cliente fue mandando por WhatsApp y correo? Soy Ricardo, empresa mexicana de software — construimos algo que ordena toda esa documentación por caso. ¿Le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Duda de colega: ¿se les ha traspapelado un documento clave entre tantos chats de un asunto? Estamos por lanzar una herramienta que agrupa todo por expediente. Me sirve su opinión antes de salir — ¿se puede?",
-        "Hola {n} 👋 Vi su despacho en Google. ¿Cuánto tiempo se va reconstruyendo un expediente con papeles regados en WhatsApp, correo y fotos? Ando hablando con abogados porque sacamos algo para eso. No vendo hoy, pido feedback. ¿Les interesa?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Tardan armando un expediente con docs regados en WhatsApp y correo? Hicimos algo que los junta por caso. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Se les traspapela un documento entre tantos chats de un asunto? Tenemos algo que lo ordena solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Pierden tiempo reconstruyendo expedientes de varios chats? Armamos algo para eso. ¿Le late?",
     ],
     "condominios": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta rápida: los comprobantes de pago y reportes que los condóminos mandan por foto en WhatsApp, ¿cómo los ordenan a fin de mes? Soy Ricardo, empresa mexicana de software — armamos algo que junta todo eso por unidad y mes. ¿Le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Duda honesta: ¿cuánto batallan juntando evidencias y recibos de mantenimiento que llegan sueltos por chat? Construimos una herramienta que los acomoda por condominio. Su opinión me sirve antes de lanzar — ¿se puede?",
-        "Hola {n} 👋 Vi su perfil en Google. ¿Les pasa que el expediente de una unidad está repartido en mil fotos de WhatsApp? Ando platicando con administradores porque sacamos algo para eso. No les vendo hoy, busco feedback. ¿Les late?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Cómo juntan los comprobantes y reportes que mandan por foto en WhatsApp? Hicimos algo que los ordena por unidad. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Batallan a fin de mes con recibos de mantenimiento regados en chats? Tenemos algo que los acomoda solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿El expediente de una unidad está repartido en mil fotos? Armamos algo que lo ordena. ¿Le late?",
     ],
     "inmobiliaria": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta rápida: las fotos de propiedades y documentos de cada operación, ¿cómo las tienen ordenadas cuando un cliente pregunta? Soy Ricardo, empresa mexicana de software — armamos algo que junta todo por propiedad y cliente. ¿Le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Duda de campo: ¿cuánto tardan hallando el contrato o las fotos de un inmueble entre tantos chats? Estamos por lanzar una herramienta que lo ordena solito. Me sirve su opinión antes de salir — ¿se puede?",
-        "Hola {n} 👋 Vi su perfil en Google. ¿Se les ha perdido la documentación de una propiedad entre WhatsApp y correo? Ando hablando con inmobiliarias porque sacamos algo para eso. No vendo hoy, pido feedback. ¿Les interesa?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Cómo tienen las fotos y docs de cada propiedad cuando un cliente pregunta? Hicimos algo que los ordena por inmueble. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Tardan hallando el contrato o fotos de un inmueble entre chats? Tenemos algo que lo ordena solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Se pierde documentación de una propiedad en WhatsApp? Armamos algo para eso. ¿Le late?",
     ],
     "seguros": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta rápida: las fotos de un siniestro y los documentos de la póliza que el cliente manda por WhatsApp, ¿cómo los arman para el reclamo? Soy Ricardo, empresa mexicana de software — construimos algo que ordena todo eso por caso. ¿Le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Duda honesta: ¿cuánto tiempo se va juntando evidencias de un siniestro regadas en chats y correo? Armamos una herramienta que las agrupa por póliza y cliente. Su opinión me sirve antes de lanzar — ¿se puede?",
-        "Hola {n} 👋 Vi su perfil en Google. ¿Les ha tocado rearmar un expediente de reclamo juntando fotos de varios lados? Ando platicando con agentes de seguros porque sacamos algo para eso. No les vendo hoy, busco feedback. ¿Les late?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Cómo arman un reclamo con las fotos del siniestro que llegan por WhatsApp? Hicimos algo que las ordena por póliza. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Se va tiempo juntando evidencias de un siniestro regadas en chats? Tenemos algo que las junta solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Batallan rearmando expedientes de reclamos? Armamos algo que los ordena. ¿Le late?",
     ],
     "construccion": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta rápida: las fotos de avance de obra que mandan por WhatsApp, ¿cómo las ordenan por proyecto cuando el cliente pide reporte? Soy Ricardo, empresa mexicana de software — armamos algo que junta todo eso por obra. ¿Le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Duda de campo: ¿cuánto batallan hallando la foto de un avance o un plano entre tantos chats de obra? Construimos una herramienta que lo ordena solo por proyecto. Me sirve su opinión antes de salir — ¿se puede?",
-        "Hola {n} 👋 Vi su perfil en Google. ¿Se pierde evidencia de obra entre los WhatsApp del equipo? Ando hablando con constructoras porque sacamos algo para eso. No vendo hoy, pido feedback. ¿Les interesa?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Cómo ordenan las fotos de avance de obra que llegan por WhatsApp? Hicimos algo que las junta por proyecto. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Batallan hallando la foto de un avance o un plano entre chats? Tenemos algo que lo ordena solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Se pierde evidencia de obra en los WhatsApp del equipo? Armamos algo para eso. ¿Le late?",
     ],
     "aduanal": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta rápida: pedimentos, facturas y fotos de carga que llegan por WhatsApp y correo, ¿cómo los arman por operación? Soy Ricardo, empresa mexicana de software — construimos algo que ordena toda esa documentación por embarque. ¿Le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Duda de colega: ¿cuánto tiempo se va juntando los documentos de un despacho regados en mil chats? Armamos una herramienta que los agrupa por operación y cliente. Su opinión me sirve antes de lanzar — ¿se puede?",
-        "Hola {n} 👋 Vi su agencia en Google. ¿Se les ha traspapelado un documento de un despacho entre WhatsApp y correo? Ando platicando con agentes aduanales porque sacamos algo para eso. No les vendo hoy, busco feedback. ¿Les late?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Cómo arman pedimentos y facturas que llegan por WhatsApp y correo? Hicimos algo que los ordena por operación. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Se va tiempo juntando documentos de un despacho regados en chats? Tenemos algo que los junta solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Se traspapela un documento de un despacho en WhatsApp? Armamos algo para eso. ¿Le late?",
     ],
     "oficios": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta rápida: las fotos de trabajos y cotizaciones que mandan por WhatsApp, ¿cómo las encuentran cuando un cliente vuelve meses después? Soy Ricardo, empresa mexicana de software — armamos algo que ordena todo eso por cliente y trabajo. ¿Le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Duda honesta: ¿cuánto tardan hallando la foto o el presupuesto de un trabajo viejo entre tantos chats? Construimos una herramienta que lo acomoda solo. Me sirve su opinión antes de salir — ¿se puede?",
-        "Hola {n} 👋 Vi su perfil en Google. ¿Se pierde la foto de un trabajo entre tanto WhatsApp? Ando hablando con talleres y negocios como el suyo porque sacamos algo para eso. No vendo hoy, pido feedback. ¿Les interesa?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Cómo encuentran fotos y cotizaciones de trabajos viejos en WhatsApp? Hicimos algo que las ordena por cliente. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Tardan hallando la foto o el presupuesto de un trabajo entre chats? Tenemos algo que lo acomoda solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Se pierde la foto de un trabajo entre tanto WhatsApp? Armamos algo para eso. ¿Le late?",
     ],
     "viajes": [
-        "Hola, ¿{n}? Los vi en Google Maps. Pregunta rápida: comprobantes, vouchers y documentos de cada reserva que llegan por WhatsApp, ¿cómo los ordenan por cliente y viaje? Soy Ricardo, empresa mexicana de software — armamos algo que junta todo eso solo. ¿Le cuento en 2 mensajes?",
-        "Qué tal {n}, los encontré en Maps. Duda de campo: ¿cuánto batallan juntando los papeles de una reserva regados en chats? Construimos una herramienta que los agrupa por cliente. Su opinión me sirve antes de lanzar — ¿se puede?",
-        "Hola {n} 👋 Vi su perfil en Google. ¿Se traspapela un voucher o un pasaporte entre tantos WhatsApp? Ando platicando con agencias de viajes porque sacamos algo para eso. No les vendo hoy, busco feedback. ¿Les late?",
+        "Hola ¿{n}? 👋 Los vi en Google Maps. ¿Cómo ordenan vouchers y docs de cada reserva que llegan por WhatsApp? Hicimos algo que los junta por cliente. ¿Le interesa?",
+        "Qué tal {n}, los vi en Maps. ¿Batallan juntando los papeles de una reserva regados en chats? Tenemos algo que los ordena solo. ¿Le cuento rápido?",
+        "Hola {n} 👋 Soy Ricardo, de una empresa mexicana de software. ¿Se traspapela un voucher o pasaporte en WhatsApp? Armamos algo para eso. ¿Le late?",
     ],
 }
 

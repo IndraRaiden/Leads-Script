@@ -1,0 +1,16 @@
+# Black Stronghold (servicios de automatización con IA). Empresas con VOLUMEN
+# operativo y equipos saturados: logística, distribución, call centers, cobranza.
+empresa de logistica | Ciudad de Mexico
+empresa de logistica | Guadalajara Mexico
+empresa de logistica | Monterrey Mexico
+centro de distribucion | Ciudad de Mexico
+centro de distribucion | Monterrey Mexico
+call center | Ciudad de Mexico
+call center | Guadalajara Mexico
+call center | Monterrey Mexico
+agencia de cobranza | Ciudad de Mexico
+agencia de cobranza | Monterrey Mexico
+distribuidora | Ciudad de Mexico
+distribuidora | Guadalajara Mexico
+distribuidora | Monterrey Mexico
+empresa de paqueteria | Ciudad de Mexico

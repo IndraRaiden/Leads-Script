@@ -1,0 +1,12 @@
+# Negocios que "a huevo" viven ahogados en documentos por WhatsApp + pagan:
+# agencias de seguros e inmobiliarias. Cada cliente = un fajo de papeles.
+agencia de seguros | Ciudad de Mexico
+agencia de seguros | Guadalajara Mexico
+agencia de seguros | Monterrey Mexico
+agencia de seguros | Puebla Mexico
+agencia de seguros | Queretaro Mexico
+inmobiliaria | Ciudad de Mexico
+inmobiliaria | Guadalajara Mexico
+inmobiliaria | Monterrey Mexico
+inmobiliaria | Puebla Mexico
+inmobiliaria | Queretaro Mexico
